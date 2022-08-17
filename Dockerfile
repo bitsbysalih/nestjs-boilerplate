@@ -41,6 +41,7 @@ RUN npm run build
 
 # Set NODE_ENV environment variable
 ENV NODE_ENV production
+ENV PORT 8080
 ENV MONGO_URI mongodb+srv://bitsbysalih:FreshStart1*@cluster0.brkx7.mongodb.net/ebc?retryWrites=true&w=majority
 ENV JWT_SECRET Xx7GEJTabfUnUgkQzrzC
 ENV SENDGRID_API_KEY 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
