@@ -1,0 +1,12 @@
+export { changeMail } from './change-mail.html';
+export { changePasswordInfo } from './change-password-info.html';
+export { confirmMail } from './confirm-mail.html';
+export { confirmCardDetails } from './confirm-card-details.html';
+export { confirmCardEdit } from './confirm-card-edit.html';
+export { resetPassword } from './reset-password.html';
+export { confirmCardDeletion } from './confirm-card-deletion.html';
+export { newCardEmail } from './new-card-email.html';
+export { subscriptionInfoMail } from './subscription-info.html';
+export { subscriptionUpdateMail } from './subscription-update.html';
+export { subscriptionCancellationMail } from './subscription-cancellation.html';
+export { cardListRequestMail } from './card-list-request.html';

@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>Email Verified</title>
+    <link rel='preconnect' href='https://fonts.googleapis.com' />
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+    <link
+      href='https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap'
+      rel='stylesheet'
+    />
+    <style>
+      body{ background-color:#F5F5F5;font-family: 'Open Sans', sans-serif;
+      height:90vh; } .container{ display:flex; width:100%; height:100%;
+      justify-content:center; align-items:center; margin:0 auto; } .card{
+      background-color:white; display:flex; flex-direction:column;
+      align-items:center; width:20%; height:40%; margin:0 auto; text-align:
+      center; justify-content:center; } .card-details{list-style:none;}
+      .card-details li{display;flex; justify-content:space-between;}
+      .link-button{margin-top:1rem;text-decoration:none;
+      background-color:#E0E0E0;padding:1rem 1.5rem; color:black; transition:
+      0.1s ease-in;} .link-button:hover{background-color:#e0e0e0a8;}
+      .name{font-weight:bold}
+    </style>
+
+  </head>
+  <body>
+    <div class='container'>
+      <div class='card'>
+        {{#if status}}
+          <img
+            src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAAE+UlEQVRoge2ZW2wUVRjHf9+ZotDGSygUUGlKmggFQaVcLL1IJRG6hRYf6iUmhhgiDyYaoIXXfbS0JdHEN58wxgiJ4VZWJXJpl5tRgiBSeTAYNZKWEmMpiN09nw+9LbszuzvNLBrC/23Od/v/Z845880ZuI97GDui9c3t3XVbc1lDcpW4rav+VUQ/AUTRDduqI7tyUScnAlqj9bVGNQI8ODI0JCrrmms6vwy6lm8BHcdfnB03eccEDorYPTcqnzsZlrAdte88HloYN3QBjyaFDqg6K7fVHDibOPhedPUCR50moMnGdPX22shvORXQFg29jPJZwtAfwH6FvcZxrmg8fhSY6RF+VRyn1sbjJQLrgQZgVgKbV1qqDu32wyfPJ39UWZGkehawSWCTxuOZwmdqPH7J865ZrQB8CTB+nEcCKvzGZA0R37l9TaGdJ5umxOODfwIP+C2UJYYcp+CRLSv23Mo2wNcTsHagnNyRB5gUi91Y7CcgqycQPrpycr4zpRyRtwVemxi37KDwKaof3ozf+i5ce+zvTP6uAlqjDY8ZHSoHKkGqgHJgcsBcMyEGXFY0CpyYhIluru78OdnJdRcyGjsCMjfXDDMgD5gvyHzgrRjaA5QlO7muAYF9OSaXgvwpBRk81JWTuwArd1VA4dRpLH22gtKSJ72djJO9gIGapaeBq4Gwy4DCqdN4at4zGGMofqLES0Tv4IolZ9wMrgLCEraCHAqSqBumFxaxsGyY/ChmP15MQX7KdDqQ2G8lwvM9IJLbdVA4dRrz5y5CZJyCquViz3kGbw4mebvPf0jTC1kbv4L47jSywvTCIhbMcyff19+bGqD6i1cuV4at0dASxBwOgGsKfJMHQI60nVjr2ielCOjoWrPKKF8DRYEwTsDEyAMihVh7uD1aV5dsukNAe7TudSsmAjycDaHMe/c4Jkx+HAWqsn9Hd92biYNj2dq7Q++qyi5gUjbZSopLWba4gumFmR9UAORHkSfIR23d9dtTBPhBSXEpc4pLETEsmLcorYgAybtiLGtz9aH3RfQNYChdQEF+ASWz54xdpxORA/IxRTe2VHe2jtVP9ujoWrPKivmcNOsg8e2ZwIyLly/Q23c1V+QHRbSpuSoSSRz0aKdDS4zSSZqdKJ0ItTZY8qr9OM66lsqDp5JNnh80bV1rFiHm+3R5ve4yEOycV/t0S80X591MaRaxmeNtG0Zffy8XLp3D2vE2RcQEvmCNcUo8bZ5RQmM2yfuvX+OHnjtFjCKo3UbVm4t7N6phoxDKtoCbiCC3SkXX7t7d5LjZXAXkd5+pEJjhp0iiiCDJj6Do1xk3l7sZXLtRMdKI+q/Sf/0aP/40vNYCJA+AGm0ETiaPu68BpWGihfr6ewMnD6Dwktu46xOwkvfC//FYxc3p3jzY8sKOrrpKEXG9E0HBWKnc+nxnylz39PeTfPINvgVu+2aVPf4ZsINnM7uNw5eAd0KR28A5X5R8QOFsNtMmEf6/B1RTGqrAIPjO7V+AkeQi14CPQRvEccoY/uXkhT5xnDIRWw18APx+h1VTcmeE719MJh47ZU1eD+g+I+wdqFz+TeKhU8fxunpr5Bip3xN/Gaurt1Yf6Bm5joY1vPmhE2eWWWU9SKNjh0775XPXfrOq0bXbKiNfBV0rJydX26s6j6KyAbCAKroxF+Rzjrbu0Ja27tCW/5rHfeQS/wK8sC5IUQE8VAAAAABJRU5ErkJggg=='
+          />
+        {{/if}}
+        <p>{{message}}</p>
+        Get Started
+        <a href='https://ebc.beyin.me' class='link-button'>Login to EBC</a>
+      </div>
+    </div>
+  </body>
+</html>
