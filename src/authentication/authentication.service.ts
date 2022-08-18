@@ -10,7 +10,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
 import { nanoid } from 'nanoid';
-import bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcryptjs';
 import { hotp } from 'otplib';
 import * as moment from 'moment';
 
