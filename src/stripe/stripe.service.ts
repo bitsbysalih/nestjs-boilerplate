@@ -225,6 +225,17 @@ export class StripeService {
     }
   }
 
+  async billingPortal(user: User) {
+    try {
+      return await this.stripe.billingPortal.sessions.create({
+        customer: user.stripeCustomerId,
+        return_url: `${process.env.FRONTEND_URL}/subscription`,
+      });
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
   //Private methods
   private async listSubscriptions(priceId: string, stripeCustomerId: string) {
     try {

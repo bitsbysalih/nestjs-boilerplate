@@ -13,9 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/users/schemas/user.schema';
 import { GetUser } from 'src/users/users.decorator';
-import { AttachCardRequest } from './models/request/attach-card.request';
 import { CreateSubscriptionRequest } from './models/request/create-subscription.request';
-import { SetDefaultCardRequest } from './models/request/set-default-card.request';
 import RequestWithRawBody from './request-with-raw-body.interface';
 import { StripeService } from './stripe.service';
 
@@ -79,6 +77,15 @@ export class StripeController {
   @UseGuards(AuthGuard())
   async cancelMonthlySubscription(@GetUser() user: User) {
     return this.stripeService.cancelMonthlySubscription(user);
+  }
+
+  @Post('billing-portal')
+  @ApiOperation({
+    summary: 'Opens billing portal',
+  })
+  @UseGuards(AuthGuard())
+  async billingPortal(@GetUser() user: User) {
+    return this.stripeService.billingPortal(user);
   }
 
   @Post('webhook')
