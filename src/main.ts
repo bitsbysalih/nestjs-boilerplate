@@ -13,17 +13,16 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
-  app.enableCors();
-  //   {
-  //     origin: [
-  //       'http://localhost:3000',
-  //       'https://ebcdb.sailspad.com',
-  //       'https://www.sailspad.com',
-  //       'https://cards.sailspad.com',
-  //       'https://app.sailspad.com',
-  //       'https://ebc.sailspad.com',
-  //     ],
-  //   }
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'https://www.sailspad.com',
+      'https://cards.sailspad.com',
+      'https://app.sailspad.com',
+      'https://ebc.sailspad.com',
+    ],
+  });
+
   app.use(rawBodyMiddleware());
   const port = process.env.PORT || 8080;
 
