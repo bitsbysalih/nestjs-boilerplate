@@ -25,9 +25,6 @@ export class User {
   apiKey: string;
 
   @Prop()
-  emailVerification: string;
-
-  @Prop()
   phoneNumber: string;
 
   @Prop()
@@ -58,9 +55,6 @@ export class User {
   subscriptionType: string;
 
   @Prop()
-  signUpStep: number;
-
-  @Prop()
   subscriptionCycle: string;
 
   @Prop()
@@ -82,6 +76,9 @@ export class User {
 
   @Prop({ default: 0 })
   manuallyAddedSlots: number;
+
+  @Prop({ default: 1 })
+  signupStep: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

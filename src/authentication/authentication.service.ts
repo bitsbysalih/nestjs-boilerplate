@@ -58,39 +58,49 @@ export class AuthenticationService {
 
   async signup(signupRequest: SignupRequest) {
     try {
-      const emailVerificationToken = nanoid(10);
-      const checkForExistingUser = await this.userModel.findOne({
+      const checkForExistingVerifiedUser = await this.userModel.findOne({
         email: signupRequest.email,
+        verified: true,
       });
-      if (checkForExistingUser) {
+      if (checkForExistingVerifiedUser) {
         throw new Error('user with this email already exists');
+      }
+      const existingUnverifiedUser = await this.userModel.findOne({
+        email: signupRequest.email,
+        signupStep: 1,
+      });
+      if (existingUnverifiedUser) {
+        const salt = bcrypt.genSaltSync(12);
+        const hashedPassword = bcrypt.hashSync(signupRequest.password, salt);
+        await existingUnverifiedUser.update({
+          password: hashedPassword,
+        });
+        existingUnverifiedUser.save();
+
+        const otp = await this.generateTwoFactorAuthenticationSecret(
+          existingUnverifiedUser._id,
+        );
+        await this.mailSenderService.sendVerifyEmailMail(
+          existingUnverifiedUser.firstName,
+          existingUnverifiedUser.email,
+          otp,
+        );
+        return await this.returnAccessTokens(existingUnverifiedUser);
       }
       const stripeCustomer = await this.stripeService.createCustomer(
         `${signupRequest.firstName} ${signupRequest.lastName}`,
         signupRequest.email,
       );
-      const salt = await bcrypt.genSaltSync(12);
-      const hashedPassword = await bcrypt.hashSync(
-        signupRequest.password,
-        salt,
-      );
+      const salt = bcrypt.genSaltSync(12);
+      const hashedPassword = bcrypt.hashSync(signupRequest.password, salt);
       const createNewUser = await this.userModel.create({
         ...signupRequest,
         apiKey: nanoid(20),
         password: hashedPassword,
         stripeCustomerId: stripeCustomer.id,
-        signUpStep: 2,
-        // cardSlots: signupRequest.cardSlots || 100,
-        // availableCardSlots: signupRequest.cardSlots || 100,
-        emailVerification: emailVerificationToken,
+        signupStep: 1,
       });
       await createNewUser.save();
-
-      const payload: JwtPayload = {
-        id: createNewUser._id,
-        email: createNewUser.email,
-        role: createNewUser.role,
-      };
       const otp = await this.generateTwoFactorAuthenticationSecret(
         createNewUser._id,
       );
@@ -99,14 +109,7 @@ export class AuthenticationService {
         createNewUser.email,
         otp,
       );
-      return {
-        token: await this.jwtService.signAsync(payload),
-        refreshToken: await this.createRefreshToken(createNewUser.email),
-        firstName: createNewUser.firstName,
-        lastName: createNewUser.lastName,
-        stripeCustomerId: createNewUser.stripeCustomerId,
-        email: createNewUser.email,
-      };
+      return await this.returnAccessTokens(createNewUser);
     } catch (e) {
       throw new ConflictException('Error Signing up user', e.message);
     }
@@ -117,6 +120,7 @@ export class AuthenticationService {
     try {
       const user = await this.userModel.findOne({
         email: mobileSignupRequest.email,
+        verified: true,
       });
       if (user) {
         throw new ConflictException('user already exists');
@@ -174,35 +178,31 @@ export class AuthenticationService {
 
   async signin(signinRequest: SigninRequest): Promise<any> {
     try {
-      const user = await this.userModel.findOne({
+      const existingUser = await this.userModel.findOne({
         email: signinRequest.identifier,
+        verified: true,
+        signupStep: 2,
       });
-      if (!user || !bcrypt.compareSync(signinRequest.password, user.password)) {
+
+      if (
+        !existingUser ||
+        !bcrypt.compareSync(signinRequest.password, existingUser.password)
+      ) {
         throw new NotFoundException('user not found');
       }
 
-      if (!user.stripeCustomerId) {
-        const stripeCustomer = await this.stripeService.createCustomer(
-          `${user.firstName} ${user.lastName}`,
-          user.email,
-        );
-        await user.update({ stripeCustomerId: stripeCustomer.id });
-        await user.save();
+      const stripeCustomer = await this.stripeService.createCustomer(
+        `${existingUser.firstName} ${existingUser.lastName}`,
+        existingUser.email,
+      );
+      if (!existingUser.stripeCustomerId) {
+        await existingUser.update({ stripeCustomerId: stripeCustomer.id });
+        existingUser.save();
       }
-      const payload: JwtPayload = {
-        id: user._id,
-        email: user.email,
-        role: user.role,
-      };
-      return {
-        token: await this.jwtService.signAsync(payload),
-        refreshToken: await this.createRefreshToken(user.email),
-        id: user._id,
-        email: user.email,
-        subscriptionStatus: user.monthlySubscriptionStatus,
-      };
+
+      return await this.returnAccessTokens(existingUser);
     } catch (e) {
-      throw new ConflictException('Error Signing in user', e.message);
+      throw new BadRequestException(e.response);
     }
   }
 
@@ -281,6 +281,7 @@ export class AuthenticationService {
       });
       if (user) {
         user.verified = true;
+        user.signupStep = 2;
         await user.save();
         return {
           email: user.email,
@@ -332,5 +333,22 @@ export class AuthenticationService {
     await user.update({ otpToken: otp });
 
     return otp;
+  }
+
+  private async returnAccessTokens(user: User) {
+    const payload: JwtPayload = {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+    };
+    return {
+      token: await this.jwtService.signAsync(payload),
+      refreshToken: await this.createRefreshToken(user.email),
+      firstName: user.firstName,
+      lastName: user.lastName,
+      stripeCustomerId: user.stripeCustomerId,
+      email: user.email,
+      signupStep: user.signupStep,
+    };
   }
 }

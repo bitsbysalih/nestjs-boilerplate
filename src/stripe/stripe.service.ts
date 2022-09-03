@@ -147,11 +147,7 @@ export class StripeService {
 
       switch (event.type) {
         case 'customer.subscription.updated':
-          this.updateMonthlySubscriptionStatus(
-            customerId,
-            subscriptionStatus,
-            data.quantity,
-          );
+          this.updateMonthlySubscriptionStatus(customerId, subscriptionStatus);
           break;
         case 'customer.subscription.created':
           this.newMonthlySubscriptionStatus(
@@ -166,6 +162,10 @@ export class StripeService {
           break;
         case 'invoice.payment_succeeded':
           await this.sendSubscriptionInvoiceEmail(data);
+          await this.updateCardSlotsCount(
+            customerId,
+            data.lines.data[0].quantity.toString(),
+          );
           await this.setCardToDefault(data);
           break;
         default:
@@ -261,8 +261,6 @@ export class StripeService {
     if (user) {
       await user.updateOne({
         monthlySubscriptionStatus,
-        availableCardSlots: data.quantity,
-        cardSlots: data.quantity,
         subscriptionId: data.id,
       });
       await user.save();
@@ -272,20 +270,26 @@ export class StripeService {
   private async updateMonthlySubscriptionStatus(
     customerId: string,
     monthlySubscriptionStatus: string,
-    cardSlots?: number,
   ) {
     const user = await this.userModel.findOne({ stripeCustomerId: customerId });
     if (user) {
-      const newCardCount = cardSlots - user.cardSlots;
       await user.updateOne({
         monthlySubscriptionStatus,
-        availableCardSlots: cardSlots
-          ? user.availableCardSlots + newCardCount
-          : user.availableCardSlots,
-        cardSlots: cardSlots ? user.cardSlots + newCardCount : user.cardSlots,
       });
       await user.save();
     }
+  }
+
+  private async updateCardSlotsCount(customerId: string, cardSlots: number) {
+    const user = await this.userModel.findOne({ stripeCustomerId: customerId });
+    const newCardCount = cardSlots - user.cardSlots;
+    await user.update({
+      availableCardSlots: cardSlots
+        ? user.availableCardSlots + newCardCount
+        : user.availableCardSlots,
+      cardSlots: cardSlots ? user.cardSlots + newCardCount : user.cardSlots,
+    });
+    await user.save();
   }
 
   private async sendSubscriptionInvoiceEmail(data: any) {
