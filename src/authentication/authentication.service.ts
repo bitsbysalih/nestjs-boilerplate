@@ -181,12 +181,14 @@ export class AuthenticationService {
       const existingUser = await this.userModel.findOne({
         email: signinRequest.identifier,
         verified: true,
-        signupStep: 2,
       });
 
       if (
         !existingUser ||
-        !bcrypt.compareSync(signinRequest.password, existingUser.password)
+        (await !bcrypt.compareSync(
+          signinRequest.password,
+          existingUser.password,
+        ))
       ) {
         throw new NotFoundException('user not found');
       }
