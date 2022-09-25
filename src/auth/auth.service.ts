@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Users } from '@prisma/client';
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcrypt';
 import {
   nanoid,
   // customAlphabet
@@ -36,7 +36,11 @@ export class AuthService {
     private mailService: MailService,
     private storageService: StorageService,
     private stripeService: StripeService,
-  ) {}
+  ) {
+    totp.options = {
+      step: 300,
+    };
+  }
 
   //Takes user details and creates new account
   async signup(
@@ -49,14 +53,9 @@ export class AuthService {
       const existingUser = await this.prisma.users.findUnique({
         where: { email: signUpDto.email },
       });
-      //   totp.options = {
-      //     step: 300,
-      //   };
-
-      //   const shortCode = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUV', 5);
 
       const salt = await bcrypt.genSalt(12);
-      const hashedPassword = bcrypt.hashSync(signUpDto.password, salt);
+      const hashedPassword = await bcrypt.hash(signUpDto.password, salt);
       const stripeCustomerId = await this.stripeService.createCustomer(
         `${signUpDto.firstName.toUpperCase()} ${signUpDto.lastName.toUpperCase()}`,
         signUpDto.email,
@@ -132,7 +131,7 @@ export class AuthService {
       if (!user || !user.isEmailVerified) {
         throw new NotFoundException('User not found');
       }
-      if (!bcrypt.compareSync(loginDto.password, user.password)) {
+      if (!(await bcrypt.compare(loginDto.password, user.password))) {
         throw new UnauthorizedException('Password is incorrect');
       }
       return await this.returnAccountDetails(user);
