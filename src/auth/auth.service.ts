@@ -49,9 +49,9 @@ export class AuthService {
       const existingUser = await this.prisma.users.findUnique({
         where: { email: signUpDto.email },
       });
-      totp.options = {
-        step: 300,
-      };
+      //   totp.options = {
+      //     step: 300,
+      //   };
 
       //   const shortCode = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUV', 5);
 
@@ -154,9 +154,6 @@ export class AuthService {
 
   async resendOtp(user: Users) {
     try {
-      totp.options = {
-        step: 300,
-      };
       const newOtpToken = totp.generate(
         this.configService.get('auth.otpSecret'),
       );
