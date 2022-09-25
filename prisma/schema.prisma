@@ -1,0 +1,98 @@
+generator client {
+    provider      = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl"]
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+}
+
+model Users {
+    id                        String                     @id @default(cuid()) @map("_id")
+    firstName                 String
+    lastName                  String
+    password                  String
+    jobTitle                  String
+    dateOfBirth               DateTime?
+    phoneNumber               String?
+    profilePhoto              String?
+    email                     String                     @unique
+    isEmailVerified           Boolean                    @default(false)
+    stripeCustomerId          String
+    monthlySubscriptionStatus MonthlySubscriptionStatus?
+    canAddLogo                Boolean?                   @default(false)
+    canAddBackground          Boolean?                   @default(false)
+    cardSlots                 Int?                       @default(200)
+    availableCardSlots        Int?                       @default(200)
+    otpToken                  String?                    @unique
+    roles                     Role[]                     @default([USER])
+    links                     Link[]
+    markers                   Markers[]
+}
+
+model Cards {
+    id              String  @id @default(cuid()) @map("_id")
+    name            String
+    title           String
+    about           String
+    email           String
+    uniqueId        String
+    activeStatus    Boolean @default(true)
+    cardImage       String?
+    logoImage       String?
+    backgroundImage String?
+    cardBodyImage   String?
+    shortName       String
+    userId          String
+    links           Link[]
+    marker          Marker
+}
+
+model RefreshTokens {
+    id    String @id @default(cuid()) @map("_id")
+    email String
+    token String @unique
+}
+
+model Markers {
+    id          String  @id @default(cuid()) @map("_id")
+    markerImage String
+    markerFile  String
+    uniqueId    String
+    userId      String?
+    user        Users?  @relation(fields: [userId], references: [id])
+}
+
+model StripeEvents {
+    id    String   @id @default(cuid()) @map("_id")
+    time  DateTime @default(now())
+    event String
+}
+
+enum MonthlySubscriptionStatus {
+    active
+    past_due
+    unpaid
+    canceled
+    incomplete
+    incomplete_expired
+    trialing
+    ended
+}
+
+enum Role {
+    ADMIN
+    USER
+}
+
+type Link {
+    name String
+    link String
+}
+
+type Marker {
+    uniqueId    String
+    markerFile  String
+    markerImage String
+}
