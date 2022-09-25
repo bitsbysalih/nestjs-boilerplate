@@ -13,6 +13,15 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'https://www.sailspad.com',
+      'https://cards.sailspad.com',
+      'https://app.sailspad.com',
+      'https://ebc.sailspad.com',
+    ],
+  });
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
 
