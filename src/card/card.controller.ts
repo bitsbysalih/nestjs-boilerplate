@@ -5,12 +5,13 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Cards, Users } from '@prisma/client';
 import { GetUser } from 'src/auth/auth.decorator';
 import { JwtAuthGuard } from '../auth/jwt-guard.guard';
@@ -101,6 +102,27 @@ export class CardController {
     },
   ) {
     return await this.cardService.markerUpload(user, files);
+  }
+
+  @Post('/mobile-marker-upload')
+  @ApiOperation({
+    summary: 'Uploads markers From mobile',
+  })
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'markerImage', maxCount: 1 },
+      { name: 'markerFile', maxCount: 1 },
+    ]),
+  )
+  async mobileMarkerUpload(
+    @UploadedFiles()
+    files: {
+      markerImage?: Express.Multer.File;
+      markerFile?: Express.Multer.File;
+    },
+    @Query('userId') userId: string,
+  ) {
+    return this.cardService.mobileMarkerUpload(userId, files);
   }
 
   @Get('marker')

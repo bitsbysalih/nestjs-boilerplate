@@ -173,6 +173,38 @@ export class CardService {
     }
   }
 
+  async mobileMarkerUpload(
+    userId: string,
+    @UploadedFiles()
+    files: {
+      markerImage?: Express.Multer.File;
+      markerFile?: Express.Multer.File;
+    },
+  ) {
+    try {
+      const nanoid = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUV', 5);
+
+      const fileName = await this.storageService.uploadFile(
+        files.markerFile[0],
+      );
+      const imageName = await this.storageService.uploadFile(
+        files.markerImage[0],
+      );
+
+      const marker = await this.prisma.markers.create({
+        data: {
+          markerFile: fileName,
+          markerImage: imageName,
+          uniqueId: nanoid(),
+          userId: userId,
+        },
+      });
+      return marker;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
   async getAllMarkers(user: Users) {
     try {
       const filteredMarkers = [];
