@@ -226,6 +226,13 @@ export class AuthService {
     }
   }
 
+  async checkEmail(email: string): Promise<boolean> {
+    const user = await this.prisma.users.findUnique({
+      where: { email },
+    });
+    return user ? false : true;
+  }
+
   async forgotPassword() {
     try {
       // find user account by id and send an otp

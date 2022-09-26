@@ -60,4 +60,10 @@ export class AuthController {
     // this.logger.log('Verifying email');
     return await this.authService.validateEmail(token);
   }
+
+  @Post('check-email')
+  async checkEmail(@Query('email') email: string) {
+    // this.logger.log('Verifying email');
+    return await this.authService.checkEmail(email);
+  }
 }
