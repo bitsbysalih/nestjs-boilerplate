@@ -59,4 +59,12 @@ export class UserController {
   async getUsersDetails(@Param('id') id: string) {
     return await this.userService.getUsersDetails(id);
   }
+
+  @Put('edit-password')
+  async changePassword(
+    @GetUser() user: Users,
+    @Body() updateuserDto: UpdateUserDto,
+  ) {
+    return await this.userService.changePassword(user, updateuserDto);
+  }
 }

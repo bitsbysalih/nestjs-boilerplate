@@ -5,7 +5,10 @@ import {
   UploadedFile,
 } from '@nestjs/common';
 import { Users } from '@prisma/client';
-import { StorageService } from 'src/storage/storage.service';
+import * as bcrypt from 'bcrypt';
+
+//Services imports
+import { StorageService } from '../storage/storage.service';
 import { PrismaService } from '../prisma.service';
 
 //DTO imports
@@ -77,6 +80,20 @@ export class UserService {
       return this.exclude(updatedUser, 'password');
     } catch (error) {
       throw new BadRequestException(error.response);
+    }
+  }
+
+  async changePassword(user: Users, updateUserDto: UpdateUserDto) {
+    try {
+      const salt = await bcrypt.genSalt(12);
+      const hashedPassword = await bcrypt.hash(updateUserDto.password, salt);
+      await this.prisma.users.update({
+        where: { email: user.email },
+        data: { password: hashedPassword },
+      });
+      return { passwordChanged: true };
+    } catch (error) {
+      throw new BadRequestException(error.message);
     }
   }
 
