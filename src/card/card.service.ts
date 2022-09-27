@@ -56,7 +56,7 @@ export class CardService {
           activeStatus: Boolean(createCardDto.activeStatus) || true,
           uniqueId: nanoid(),
           userId: user.id,
-          marker: {
+          marker: createCardDto.marker && {
             uniqueId: createCardDto.marker.uniqueId || markers[0].uniqueId,
             markerFile:
               createCardDto.marker.markerFile || markers[0].markerFile,
