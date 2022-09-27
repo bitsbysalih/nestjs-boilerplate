@@ -67,16 +67,14 @@ export class UserService {
     @UploadedFile() profilePhoto: Express.Multer.File,
   ) {
     try {
-      if (profilePhoto) {
-        await this.storageService.uploadFile(profilePhoto);
-      }
+      const profilePhotoLink = await this.storageService.uploadFile(
+        profilePhoto,
+      );
       const updatedUser = await this.prisma.users.update({
         where: { id: user.id },
         data: {
           ...updateUserDto,
-          profilePhoto:
-            profilePhoto &&
-            `https://sailspad.fra1.digitaloceanspaces.com/${profilePhoto.originalname}`,
+          profilePhoto: profilePhotoLink,
         },
       });
       return await this.authService.returnAccountDetails(updatedUser);
