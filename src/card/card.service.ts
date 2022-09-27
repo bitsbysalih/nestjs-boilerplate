@@ -55,6 +55,7 @@ export class CardService {
           logoImage: logoImageLink,
           activeStatus: Boolean(createCardDto.activeStatus) || true,
           uniqueId: nanoid(),
+          shortName: nanoid(),
           userId: user.id,
           marker: createCardDto.marker && {
             uniqueId: createCardDto.marker.uniqueId || markers[0].uniqueId,

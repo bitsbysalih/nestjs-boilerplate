@@ -33,17 +33,17 @@ model Users {
 
 model Cards {
     id              String  @id @default(cuid()) @map("_id")
-    name            String
-    title           String
+    name            String?
+    title           String?
     about           String?
-    email           String
+    email           String?
     uniqueId        String?
     activeStatus    Boolean @default(true)
     cardImage       String?
     logoImage       String?
     backgroundImage String?
     cardBodyImage   String?
-    shortName       String
+    shortName       String?
     userId          String
     links           Link[]
     marker          Marker?
