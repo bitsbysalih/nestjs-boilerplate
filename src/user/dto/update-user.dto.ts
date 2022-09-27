@@ -13,7 +13,8 @@ import {
 export class UpdateUserDto {
   @IsEmail()
   @IsOptional()
-  email: string;
+  @Transform(({ value }) => value.toLowerCase().trim())
+  email?: string;
 
   @IsString()
   @IsOptional()
@@ -21,7 +22,7 @@ export class UpdateUserDto {
   @Transform(({ value }) => value.toLowerCase().trim())
   @Matches(RegExp('^[A-Za-zıöüçğşİÖÜÇĞŞñÑáéíóúÁÉÍÓÚ ]+$'))
   @MaxLength(20)
-  firstName: string;
+  firstName?: string;
 
   @IsOptional()
   @IsString()
@@ -29,15 +30,19 @@ export class UpdateUserDto {
   @Transform(({ value }) => value.toLowerCase().trim())
   @Matches(RegExp('^[A-Za-zıöüçğşİÖÜÇĞŞñÑáéíóúÁÉÍÓÚ ]+$'))
   @MaxLength(20)
-  lastName: string;
+  lastName?: string;
 
   @IsOptional()
   @IsString()
-  password: string;
+  password?: string;
+
+  @IsOptional()
+  @IsString()
+  jobTitle?: string;
 
   @IsArray()
   @IsOptional()
-  links: [Link];
+  links?: [Link];
 
   @IsOptional()
   @ApiProperty({ description: "New Users's Profile photo" })
