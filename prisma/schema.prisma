@@ -35,7 +35,7 @@ model Cards {
     id              String  @id @default(cuid()) @map("_id")
     name            String
     title           String
-    about           String
+    about           String?
     email           String
     uniqueId        String?
     activeStatus    Boolean @default(true)
