@@ -46,7 +46,6 @@ export class CardService {
           files.logoImage[0],
         );
       }
-      const markers = await this.prisma.markers.findMany({});
       const newCard = await this.prisma.cards.create({
         data: {
           ...createCardDto,
@@ -58,11 +57,9 @@ export class CardService {
           shortName: nanoid(),
           userId: user.id,
           marker: createCardDto.marker && {
-            uniqueId: createCardDto.marker.uniqueId || markers[0].uniqueId,
-            markerFile:
-              createCardDto.marker.markerFile || markers[0].markerFile,
-            markerImage:
-              createCardDto.marker.markerImage || markers[0].markerImage,
+            uniqueId: createCardDto.marker.uniqueId,
+            markerFile: createCardDto.marker.markerFile,
+            markerImage: createCardDto.marker.markerImage,
           },
         },
       });
