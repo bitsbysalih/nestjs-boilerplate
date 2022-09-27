@@ -92,7 +92,7 @@ type Link {
 }
 
 type Marker {
-    uniqueId    String
+    uniqueId    String?
     markerFile  String
     markerImage String
 }
