@@ -37,7 +37,7 @@ model Cards {
     title           String
     about           String
     email           String
-    uniqueId        String
+    uniqueId        String?
     activeStatus    Boolean @default(true)
     cardImage       String?
     logoImage       String?
@@ -46,7 +46,7 @@ model Cards {
     shortName       String
     userId          String
     links           Link[]
-    marker          Marker
+    marker          Marker?
 }
 
 model RefreshTokens {
