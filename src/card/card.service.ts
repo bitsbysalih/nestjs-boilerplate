@@ -112,7 +112,7 @@ export class CardService {
         where: { id },
         data: {
           ...updateCardDto,
-          activeStatus: Boolean(updateCardDto.activeStatus),
+          activeStatus: updateCardDto.activeStatus,
           cardImage: cardImageLink && cardImageLink,
           backgroundImage: backgroundImageLink && backgroundImageLink,
           logoImage: logoImageLink && logoImageLink,
