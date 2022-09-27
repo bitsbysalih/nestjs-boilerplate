@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 //Services imports
 import { StorageService } from '../storage/storage.service';
 import { PrismaService } from '../prisma.service';
+import { AuthService } from 'src/auth/auth.service';
 
 //DTO imports
 import { GetUsersDto } from './dto/get-users.dto';
@@ -20,6 +21,7 @@ export class UserService {
   constructor(
     private prisma: PrismaService,
     private readonly storageService: StorageService,
+    private readonly authService: AuthService,
   ) {}
 
   async getAllUsers(getUsersDto: GetUsersDto) {
@@ -77,7 +79,7 @@ export class UserService {
             `https://sailspad.fra1.digitaloceanspaces.com/${profilePhoto.originalname}`,
         },
       });
-      return this.exclude(updatedUser, 'password');
+      return await this.authService.returnAccountDetails(updatedUser);
     } catch (error) {
       throw new BadRequestException(error.response);
     }

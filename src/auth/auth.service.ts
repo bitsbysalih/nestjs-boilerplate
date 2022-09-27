@@ -241,22 +241,8 @@ export class AuthService {
     }
   }
 
-  ////////////////////////////////
-  //                            //
-  //      Private Methods       //
-  //                            //
-  ////////////////////////////////
-
-  //Creates refresh access token
-  private async createRefreshToken(email: string) {
-    const refreshToken = await this.prisma.refreshTokens.create({
-      data: { email, token: nanoid() },
-    });
-    return refreshToken.token;
-  }
-
   //Returns auth details on sign in and sign up and other auth related processes
-  private async returnAccountDetails(user: Users) {
+  async returnAccountDetails(user: Users) {
     const payload: JwtPayload = {
       id: user.id,
       email: user.email,
@@ -275,5 +261,19 @@ export class AuthService {
       accessToken: await this.jwtService.signAsync(payload),
       refreshToken: await this.createRefreshToken(user.email),
     };
+  }
+
+  ////////////////////////////////
+  //                            //
+  //      Private Methods       //
+  //                            //
+  ////////////////////////////////
+
+  //Creates refresh access token
+  private async createRefreshToken(email: string) {
+    const refreshToken = await this.prisma.refreshTokens.create({
+      data: { email, token: nanoid() },
+    });
+    return refreshToken.token;
   }
 }
