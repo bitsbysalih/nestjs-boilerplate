@@ -32,7 +32,7 @@ export class UserService {
       });
       return users.map((user: any) => this.exclude(user, 'password'));
     } catch (error) {
-      throw new BadRequestException(error.response);
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -43,7 +43,7 @@ export class UserService {
       });
       return this.exclude(getUsers, 'password');
     } catch (error) {
-      throw new BadRequestException(error.response);
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -57,7 +57,7 @@ export class UserService {
       }
       return this.exclude(user, 'password');
     } catch (error) {
-      throw new BadRequestException(error.response);
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -79,7 +79,7 @@ export class UserService {
       });
       return await this.authService.returnAccountDetails(updatedUser);
     } catch (error) {
-      throw new BadRequestException(error.response);
+      throw new BadRequestException(error.message);
     }
   }
 

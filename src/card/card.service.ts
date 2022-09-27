@@ -281,6 +281,8 @@ export class CardService {
         where: { id },
         data: { availableCardSlots: newCount },
       });
-    } catch (error) {}
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 }

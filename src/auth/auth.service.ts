@@ -136,7 +136,7 @@ export class AuthService {
       }
       return await this.returnAccountDetails(user);
     } catch (error) {
-      throw new BadRequestException(error.response, error.message);
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -201,7 +201,7 @@ export class AuthService {
       }
       throw new UnauthorizedException('token is invalid');
     } catch (error) {
-      throw new BadRequestException(error.response, error.message);
+      throw new BadRequestException(error.message);
     }
   }
   // Sends new otp when it verifies refresh token
@@ -222,7 +222,7 @@ export class AuthService {
 
       return this.returnAccountDetails(user);
     } catch (error) {
-      throw new BadRequestException(error.response);
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -237,7 +237,7 @@ export class AuthService {
     try {
       // find user account by id and send an otp
     } catch (error) {
-      throw new BadRequestException(error.response);
+      throw new BadRequestException(error.message);
     }
   }
 
