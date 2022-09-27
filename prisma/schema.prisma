@@ -93,6 +93,6 @@ type Link {
 
 type Marker {
     uniqueId    String?
-    markerFile  String
-    markerImage String
+    markerFile  String?
+    markerImage String?
 }
