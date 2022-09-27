@@ -46,6 +46,7 @@ export class CardService {
           files.logoImage[0],
         );
       }
+      const marker = await this.prisma.markers.findFirst({});
       const newCard = await this.prisma.cards.create({
         data: {
           ...createCardDto,
@@ -56,11 +57,17 @@ export class CardService {
           uniqueId: nanoid(),
           shortName: nanoid(),
           userId: user.id,
-          marker: createCardDto.marker && {
-            uniqueId: createCardDto.marker.uniqueId,
-            markerFile: createCardDto.marker.markerFile,
-            markerImage: createCardDto.marker.markerImage,
-          },
+          marker: createCardDto.marker
+            ? {
+                uniqueId: createCardDto.marker.uniqueId,
+                markerFile: createCardDto.marker.markerFile,
+                markerImage: createCardDto.marker.markerImage,
+              }
+            : {
+                uniqueId: marker.uniqueId,
+                markerFile: marker.markerFile,
+                markerImage: marker.markerImage,
+              },
         },
       });
       await this.reduceCardCount(user.id, user.availableCardSlots - 1);
@@ -264,7 +271,7 @@ export class CardService {
       }
       return filteredMarkers;
     } catch (error) {
-      throw new BadRequestException(error);
+      throw new BadRequestException(error.message);
     }
   }
 
