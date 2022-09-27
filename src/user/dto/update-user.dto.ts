@@ -19,7 +19,6 @@ export class UpdateUserDto {
   @IsString()
   @IsOptional()
   @ApiProperty({ example: 'John', description: "New Users's First name" })
-  @Transform(({ value }) => value.toLowerCase().trim())
   @Matches(RegExp('^[A-Za-zıöüçğşİÖÜÇĞŞñÑáéíóúÁÉÍÓÚ ]+$'))
   @MaxLength(20)
   firstName?: string;
@@ -27,7 +26,6 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   @ApiProperty({ example: 'Doe', description: "New Users's Last name" })
-  @Transform(({ value }) => value.toLowerCase().trim())
   @Matches(RegExp('^[A-Za-zıöüçğşİÖÜÇĞŞñÑáéíóúÁÉÍÓÚ ]+$'))
   @MaxLength(20)
   lastName?: string;
