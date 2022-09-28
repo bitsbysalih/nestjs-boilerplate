@@ -116,7 +116,7 @@ export class UserService {
           });
           return userToDelete;
         } else {
-          throw new UnauthorizedException('Unauthorized action detected');
+          throw new UnauthorizedException('Password is incorrect');
         }
       }
     } catch (error) {
