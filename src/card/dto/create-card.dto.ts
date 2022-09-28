@@ -1,11 +1,5 @@
 import { Link } from '@prisma/client';
-import {
-  IsArray,
-  //   IsBoolean,
-  IsBooleanString,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class CreateCardDto {
   @IsString()
@@ -20,8 +14,8 @@ export class CreateCardDto {
   @IsString()
   email: string;
 
-  @IsBooleanString()
-  activeStatus: boolean;
+  @IsString()
+  activeStatus: string;
 
   @IsString()
   @IsOptional()

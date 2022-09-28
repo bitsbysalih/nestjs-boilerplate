@@ -108,11 +108,12 @@ export class CardService {
           files.logoImage[0],
         );
       }
+
       const cardToUpdate = await this.prisma.cards.update({
         where: { id },
         data: {
           ...updateCardDto,
-          activeStatus: Boolean(updateCardDto.activeStatus),
+          activeStatus: updateCardDto.activeStatus == 'true' ? true : false,
           cardImage: cardImageLink && cardImageLink,
           backgroundImage: backgroundImageLink && backgroundImageLink,
           logoImage: logoImageLink && logoImageLink,

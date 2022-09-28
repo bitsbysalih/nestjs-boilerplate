@@ -24,7 +24,7 @@ export class UpdateCardDto {
 
   @IsString()
   @IsOptional()
-  activeStatus?: boolean;
+  activeStatus?: string;
 
   @IsArray()
   @IsOptional()
