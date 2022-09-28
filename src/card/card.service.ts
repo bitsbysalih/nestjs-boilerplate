@@ -117,6 +117,11 @@ export class CardService {
           cardImage: cardImageLink && cardImageLink,
           backgroundImage: backgroundImageLink && backgroundImageLink,
           logoImage: logoImageLink && logoImageLink,
+          marker: {
+            uniqueId: updateCardDto.marker.uniqueId,
+            markerFile: updateCardDto.marker.markerFile,
+            markerImage: updateCardDto.marker.markerImage,
+          },
         },
       });
       return cardToUpdate;

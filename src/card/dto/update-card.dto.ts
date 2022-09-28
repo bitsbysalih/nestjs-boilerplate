@@ -1,4 +1,4 @@
-import { Link } from '@prisma/client';
+import { Link, Marker } from '@prisma/client';
 import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class UpdateCardDto {
@@ -29,4 +29,6 @@ export class UpdateCardDto {
   @IsArray()
   @IsOptional()
   links?: [Link];
+
+  marker: Marker;
 }
