@@ -105,9 +105,10 @@ export class UserService {
       const userToDelete = await this.prisma.users.findUnique({
         where: { id: user.id },
       });
+
       if (userToDelete) {
         if (
-          await bcrypt.compare(userToDelete.password, deleteAccountDto.password)
+          await bcrypt.compare(deleteAccountDto.password, userToDelete.password)
         ) {
           await this.prisma.users.delete({
             where: { id: user.id },
@@ -121,6 +122,7 @@ export class UserService {
           throw new UnauthorizedException('Password is incorrect');
         }
       }
+      throw new UnauthorizedException('User not found');
     } catch (error) {
       throw new BadRequestException(error.message);
     }
