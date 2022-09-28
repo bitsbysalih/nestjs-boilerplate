@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Put,
@@ -21,6 +22,7 @@ import { Role, Users } from '@prisma/client';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { GetUser } from 'src/auth/auth.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { DeleteAccountDto } from './dto/delete-account.dto';
 
 //Guards imports
 
@@ -66,5 +68,13 @@ export class UserController {
     @Body() updateuserDto: UpdateUserDto,
   ) {
     return await this.userService.changePassword(user, updateuserDto);
+  }
+
+  @Delete('/delete')
+  async deleteAccont(
+    @GetUser() user: Users,
+    @Body() deleteAccountDto: DeleteAccountDto,
+  ) {
+    return await this.userService.deleteAccount(user, deleteAccountDto);
   }
 }

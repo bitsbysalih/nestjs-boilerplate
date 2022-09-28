@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
   UploadedFile,
 } from '@nestjs/common';
 import { Users } from '@prisma/client';
@@ -15,6 +16,7 @@ import { AuthService } from 'src/auth/auth.service';
 //DTO imports
 import { GetUsersDto } from './dto/get-users.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { DeleteAccountDto } from './dto/delete-account.dto';
 
 @Injectable()
 export class UserService {
@@ -93,6 +95,30 @@ export class UserService {
         data: { password: hashedPassword },
       });
       return { passwordChanged: true };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async deleteAccount(user: Users, deleteAccountDto: DeleteAccountDto) {
+    try {
+      const userToDelete = await this.prisma.users.findUnique({
+        where: { id: user.id },
+      });
+      if (userToDelete) {
+        if (bcrypt.compare(user.password, deleteAccountDto.password)) {
+          await this.prisma.users.delete({
+            where: { id: user.id },
+          });
+          await this.prisma.cards.deleteMany({ where: { userId: user.id } });
+          await this.prisma.markers.deleteMany({
+            where: { userId: user.id },
+          });
+          return userToDelete;
+        } else {
+          throw new UnauthorizedException('Unauthorized action detected');
+        }
+      }
     } catch (error) {
       throw new BadRequestException(error.message);
     }
