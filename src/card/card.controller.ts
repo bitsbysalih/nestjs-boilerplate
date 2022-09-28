@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -83,6 +84,11 @@ export class CardController {
   @Get(':id/details')
   async getCard(@Param('id') id: string) {
     return await this.cardService.getCard(id);
+  }
+
+  @Delete(':id/delete')
+  async deleteCard(@Param('id') id: string) {
+    return await this.cardService.deleteCard(id);
   }
 
   @Post('marker')

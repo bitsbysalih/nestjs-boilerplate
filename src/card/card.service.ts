@@ -130,6 +130,15 @@ export class CardService {
     }
   }
 
+  async deleteCard(id: string) {
+    try {
+      await this.prisma.cards.delete({ where: { id } });
+      return { cardDeleted: true };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
   async getAllUsersCards(user: Users): Promise<Cards[]> {
     try {
       const cards = await this.prisma.cards.findMany({
