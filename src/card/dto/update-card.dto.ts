@@ -30,5 +30,6 @@ export class UpdateCardDto {
   @IsOptional()
   links?: [Link];
 
+  @IsOptional()
   marker: Marker;
 }
