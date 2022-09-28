@@ -106,7 +106,9 @@ export class UserService {
         where: { id: user.id },
       });
       if (userToDelete) {
-        if (await bcrypt.compare(user.password, deleteAccountDto.password)) {
+        if (
+          await bcrypt.compare(userToDelete.password, deleteAccountDto.password)
+        ) {
           await this.prisma.users.delete({
             where: { id: user.id },
           });
