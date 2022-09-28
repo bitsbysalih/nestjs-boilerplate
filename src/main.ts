@@ -17,7 +17,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'https://sailspad-card-viewer-bitsbysalih.vercel.app',
-      'https://sailspad-client-dev.vercel.app',
+      'https://sailspad-card-viewer.vercel.app',
       'https://www.sailspad.com',
       'https://cards.sailspad.com',
       'https://app.sailspad.com',
