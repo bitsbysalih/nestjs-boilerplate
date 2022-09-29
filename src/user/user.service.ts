@@ -117,7 +117,7 @@ export class UserService {
           await this.prisma.markers.deleteMany({
             where: { userId: user.id },
           });
-          return { accountDeleted: true };
+          return true;
         } else {
           throw new UnauthorizedException('Password is incorrect');
         }
