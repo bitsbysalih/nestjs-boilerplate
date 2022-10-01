@@ -16,7 +16,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'https://card-viewer.vercel.app/',
+      'https://card-viewer.vercel.app',
       'https://sailspad-card-viewer-bitsbysalih.vercel.app',
       'http://127.0.0.1:5173',
       'http://192.168.1.108:5173',
