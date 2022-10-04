@@ -6,6 +6,7 @@ import {
   Headers,
   Req,
   BadRequestException,
+  Get,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Users } from '@prisma/client';
@@ -36,10 +37,9 @@ export class StripeController {
     );
   }
 
-  @Post('create-billing')
+  @Get('create-billing')
   @ApiOperation({
-    summary:
-      "Creates Users's subscription based on number of card slots chosen",
+    summary: 'Creates link to billing portal',
   })
   @UseGuards(JwtAuthGuard)
   async createBillingPortal(@GetUser() user: Users) {
