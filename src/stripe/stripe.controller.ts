@@ -36,6 +36,16 @@ export class StripeController {
     );
   }
 
+  @Post('create-billing')
+  @ApiOperation({
+    summary:
+      "Creates Users's subscription based on number of card slots chosen",
+  })
+  @UseGuards(JwtAuthGuard)
+  async createBillingPortal(@GetUser() user: Users) {
+    return this.stripeService.createBillingPortal(user);
+  }
+
   @Post('webhook')
   @ApiOperation({
     summary:

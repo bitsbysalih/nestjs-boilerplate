@@ -132,6 +132,17 @@ export class StripeService {
     }
   }
 
+  async createBillingPortal(user: Users) {
+    try {
+      return await this.stripe.billingPortal.sessions.create({
+        customer: user.stripeCustomerId,
+        return_url: `${process.env.FRONTEND_URL}/`,
+      });
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
   ////////////////////////////////
   //                            //
   //      Private Methods       //
