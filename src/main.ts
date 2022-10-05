@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as requestIp from 'request-ip';
@@ -9,6 +9,7 @@ import { join } from 'path';
 import rawBodyMiddleware from './stripe/raw-body.middleware';
 
 async function bootstrap() {
+  const port = process.env.PORT || 8080;
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
@@ -24,7 +25,9 @@ async function bootstrap() {
   });
 
   app.use(rawBodyMiddleware());
-  const port = process.env.PORT || 8080;
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 

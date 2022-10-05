@@ -1,35 +1,26 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Param,
   Patch,
   Post,
   Query,
   Render,
-  Res,
-  StreamableFile,
-  UploadedFile,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import {
-  FileFieldsInterceptor,
-  FileInterceptor,
-} from '@nestjs/platform-express';
-import {
-  ApiCreatedResponse,
-  ApiOkResponse,
+  //   ApiCreatedResponse,
+  //   ApiOkResponse,
   ApiTags,
   // ApiBearerAuth,
   //   ApiHeader,
   ApiOperation,
 } from '@nestjs/swagger';
-import { createReadStream } from 'fs';
-import { join } from 'path';
 //Schemas imports
 import { User } from 'src/users/schemas/user.schema';
 
@@ -43,7 +34,6 @@ import { CardsService } from './cards.service';
 import { CheckShortNameRequest } from './models/request/check-short-name.request';
 import { CreateCardRequest } from './models/request/create-card.request';
 import { DeleteCardTokenRequest } from './models/request/delete-card-token.request';
-import { DeleteCardRequest } from './models/request/delete-card.request';
 import { DeleteMarkerRequest } from './models/request/delete-marker.request';
 import { EditCardTokenRequest } from './models/request/edit-card-token.request';
 import { EditCardRequest } from './models/request/edit-card.request';
@@ -62,6 +52,9 @@ export class CardsController {
     );
     return isShortNameAvailable;
   }
+
+  //   @Post('')
+  //   version 2 endpoint
 
   @Post('/create')
   @ApiOperation({

@@ -41,7 +41,6 @@ import {
   EmailEditTokenDocument,
 } from './schemas/email-edit-token.schema';
 import { EmailEditRequest } from './models/request/email-edit-request';
-import { link } from 'fs/promises';
 import { DeleteMarkerRequest } from './models/request/delete-marker.request';
 
 const generateShortName = customAlphabet('1234567890abcdef', 8);
@@ -188,7 +187,7 @@ export class CardsService {
       if (card.deleted) {
         throw new NotFoundException('Card not found or is inactive');
       }
-      return { card };
+      return card;
     } catch (e) {
       throw new BadRequestException('Error getting card', e.message);
     }
@@ -204,7 +203,7 @@ export class CardsService {
         deleted: false,
       });
       if (cards.length <= 0) {
-        return { message: 'User has no cards' };
+        return [];
       }
       return cards;
     } catch (e) {
@@ -525,7 +524,7 @@ export class CardsService {
               });
             }
           });
-          return { markers: filteredMarkers };
+          return filteredMarkers;
         });
       } else {
         markers.map((marker) =>
@@ -536,10 +535,10 @@ export class CardsService {
             isDeletable: true,
           }),
         );
-        return { markers: filteredMarkers };
+        return filteredMarkers;
       }
 
-      return { markers: filteredMarkers };
+      return filteredMarkers;
     } catch (e) {
       throw new BadRequestException('Error getting markers', e.message);
     }
