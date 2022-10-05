@@ -24,8 +24,8 @@ model Users {
     subscriptionId            String?
     canAddLogo                Boolean?  @default(false)
     canAddBackground          Boolean?  @default(false)
-    cardSlots                 Int?      @default(200)
-    availableCardSlots        Int?      @default(200)
+    cardSlots                 Int?      @default(0)
+    availableCardSlots        Int?      @default(0)
     otpToken                  String?   @unique
     roles                     Role[]    @default([USER])
     links                     Link[]
