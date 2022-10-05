@@ -9,7 +9,7 @@ datasource db {
 }
 
 model Users {
-    id                        String                     @id @default(cuid()) @map("_id")
+    id                        String    @id @default(cuid()) @map("_id")
     firstName                 String
     lastName                  String
     password                  String
@@ -17,16 +17,17 @@ model Users {
     dateOfBirth               DateTime?
     phoneNumber               String?
     profilePhoto              String?
-    email                     String                     @unique
-    isEmailVerified           Boolean                    @default(false)
-    stripeCustomerId          String
-    monthlySubscriptionStatus MonthlySubscriptionStatus?
-    canAddLogo                Boolean?                   @default(false)
-    canAddBackground          Boolean?                   @default(false)
-    cardSlots                 Int?                       @default(200)
-    availableCardSlots        Int?                       @default(200)
-    otpToken                  String?                    @unique
-    roles                     Role[]                     @default([USER])
+    email                     String    @unique
+    isEmailVerified           Boolean   @default(false)
+    stripeCustomerId          String?   @unique
+    monthlySubscriptionStatus String?
+    subscriptionId            String?
+    canAddLogo                Boolean?  @default(false)
+    canAddBackground          Boolean?  @default(false)
+    cardSlots                 Int?      @default(200)
+    availableCardSlots        Int?      @default(200)
+    otpToken                  String?   @unique
+    roles                     Role[]    @default([USER])
     links                     Link[]
     markers                   Markers[]
 }

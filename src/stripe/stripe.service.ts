@@ -19,13 +19,13 @@ export class StripeService {
 
   async processSubscriptionUpdate(event) {
     try {
-      //   const data = event.data.object;
-      //   const customerId: string = data.customer as string;
-      //   const subscriptionStatus = data.status;
+      const data = event.data.object;
+      const customerId: string = data.customer as string;
+      const subscriptionStatus = data.status;
 
       switch (event.type) {
         case 'customer.subscription.updated':
-          //   this.updateMonthlySubscriptionStatus(customerId, subscriptionStatus);
+          this.updateMonthlySubscriptionStatus(customerId, subscriptionStatus);
           break;
         case 'payment_intent.created':
           //   this.updateMonthlySubscriptionStatus(customerId, subscriptionStatus);
@@ -43,10 +43,10 @@ export class StripeService {
           break;
         case 'invoice.payment_succeeded':
           //   await this.sendSubscriptionInvoiceEmail(data);
-          //   await this.updateCardSlotsCount(
-          //     customerId,
-          //     data.lines.data[0].quantity.toString(),
-          //   );
+          await this.updateCardSlotsCount(
+            customerId,
+            data.lines.data[0].quantity.toString(),
+          );
           //   await this.setCardToDefault(data);
           break;
         default:
@@ -160,6 +160,39 @@ export class StripeService {
         'error listing subscription',
         error.message,
       );
+    }
+  }
+
+  private async updateMonthlySubscriptionStatus(
+    customerId: string,
+    monthlySubscriptionStatus: string,
+  ) {
+    await this.prisma.users.update({
+      where: { stripeCustomerId: customerId },
+      data: { monthlySubscriptionStatus },
+    });
+  }
+
+  private async updateCardSlotsCount(customerId: string, cardSlots: number) {
+    try {
+      const user = await this.prisma.users.findUnique({
+        where: {
+          stripeCustomerId: customerId,
+        },
+      });
+      const newCardCount = cardSlots - user.cardSlots;
+      await this.prisma.users.update({
+        where: { email: user.email },
+        data: {
+          availableCardSlots: cardSlots
+            ? user.availableCardSlots + newCardCount
+            : user.availableCardSlots,
+          cardSlots: cardSlots ? user.cardSlots + newCardCount : user.cardSlots,
+        },
+      });
+      return;
+    } catch (error) {
+      throw new BadRequestException(error.message);
     }
   }
 }
