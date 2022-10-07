@@ -17,7 +17,7 @@ export class StripeService {
     });
   }
 
-  async processSubscriptionUpdate(event) {
+  async processSubscriptionUpdate(event: any) {
     try {
       const data = event.data.object;
       const customerId: string = data.customer as string;
@@ -28,7 +28,7 @@ export class StripeService {
           this.updateMonthlySubscriptionStatus(customerId, subscriptionStatus);
           break;
         case 'payment_intent.created':
-          //   this.updateMonthlySubscriptionStatus(customerId, subscriptionStatus);
+          this.updateMonthlySubscriptionStatus(customerId, subscriptionStatus);
           break;
         case 'payment_intent.succeeded':
           console.log('Payment intent success');
@@ -40,7 +40,7 @@ export class StripeService {
           );
           break;
         case 'customer.subscription.deleted':
-          //   this.updateMonthlySubscriptionStatus(customerId, subscriptionStatus);
+          this.updateMonthlySubscriptionStatus(customerId, subscriptionStatus);
           //   this.sendCancellationEmail(data);
           break;
         case 'invoice.payment_succeeded':
@@ -49,7 +49,7 @@ export class StripeService {
             customerId,
             data.lines.data[0].quantity.toString(),
           );
-          //   await this.setCardToDefault(data);
+          await this.setCardToDefault(data);
           break;
         default:
           break;
@@ -128,6 +128,25 @@ export class StripeService {
       console.log(error);
       throw new BadRequestException(
         'Error creating subscription',
+        error.message,
+      );
+    }
+  }
+
+  async setCardToDefault(data: any) {
+    try {
+      const subscription_id = data['subscription'];
+      const payment_intent_id = data['payment_intent'];
+
+      const payment_intent = await this.stripe.paymentIntents.retrieve(
+        payment_intent_id,
+      );
+      return await this.stripe.subscriptions.update(subscription_id, {
+        default_payment_method: payment_intent['payment_method'] as string,
+      });
+    } catch (error) {
+      throw new BadRequestException(
+        'Error setting default card',
         error.message,
       );
     }
