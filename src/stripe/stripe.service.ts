@@ -25,22 +25,31 @@ export class StripeService {
 
       switch (event.type) {
         case 'customer.subscription.updated':
-          this.updateMonthlySubscriptionStatus(customerId, subscriptionStatus);
+          await this.updateMonthlySubscriptionStatus(
+            customerId,
+            subscriptionStatus,
+          );
           break;
         case 'payment_intent.created':
-          this.updateMonthlySubscriptionStatus(customerId, subscriptionStatus);
+          await this.updateMonthlySubscriptionStatus(
+            customerId,
+            subscriptionStatus,
+          );
           break;
         case 'payment_intent.succeeded':
           console.log('Payment intent success');
         case 'customer.subscription.created':
-          this.newMonthlySubscriptionStatus(
+          await this.newMonthlySubscriptionStatus(
             customerId,
             data,
             subscriptionStatus,
           );
           break;
         case 'customer.subscription.deleted':
-          this.updateMonthlySubscriptionStatus(customerId, subscriptionStatus);
+          await this.updateMonthlySubscriptionStatus(
+            customerId,
+            subscriptionStatus,
+          );
           //   this.sendCancellationEmail(data);
           break;
         case 'invoice.payment_succeeded':
@@ -106,7 +115,7 @@ export class StripeService {
             price: createPaymentIntent.yearlySubscription
               ? yearlyPriceId
               : monthlyPriceId,
-            quantity: ++createPaymentIntent.cardSlots,
+            quantity: +createPaymentIntent.cardSlots,
           },
         ],
         payment_behavior: 'default_incomplete',
@@ -203,6 +212,9 @@ export class StripeService {
     customerId: string,
     monthlySubscriptionStatus: string,
   ) {
+    console.log(customerId);
+    console.log(monthlySubscriptionStatus);
+
     return await this.prisma.users.update({
       where: { stripeCustomerId: customerId },
       data: { monthlySubscriptionStatus },
