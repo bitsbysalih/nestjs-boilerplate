@@ -188,7 +188,7 @@ export class StripeService {
     data: any,
     monthlySubscriptionStatus: string,
   ) {
-    await this.prisma.users.update({
+    return await this.prisma.users.update({
       where: {
         stripeCustomerId: customerId,
       },
@@ -203,7 +203,7 @@ export class StripeService {
     customerId: string,
     monthlySubscriptionStatus: string,
   ) {
-    await this.prisma.users.update({
+    return await this.prisma.users.update({
       where: { stripeCustomerId: customerId },
       data: { monthlySubscriptionStatus },
     });
