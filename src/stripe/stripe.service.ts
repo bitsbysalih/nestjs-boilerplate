@@ -33,11 +33,11 @@ export class StripeService {
         case 'payment_intent.succeeded':
           console.log('Payment intent success');
         case 'customer.subscription.created':
-          //   this.newMonthlySubscriptionStatus(
-          //     customerId,
-          //     data,
-          //     subscriptionStatus,
-          //   );
+          this.newMonthlySubscriptionStatus(
+            customerId,
+            data,
+            subscriptionStatus,
+          );
           break;
         case 'customer.subscription.deleted':
           //   this.updateMonthlySubscriptionStatus(customerId, subscriptionStatus);
@@ -162,6 +162,22 @@ export class StripeService {
         error.message,
       );
     }
+  }
+
+  private async newMonthlySubscriptionStatus(
+    customerId: string,
+    data: any,
+    monthlySubscriptionStatus: string,
+  ) {
+    await this.prisma.users.update({
+      where: {
+        stripeCustomerId: customerId,
+      },
+      data: {
+        monthlySubscriptionStatus,
+        subscriptionId: data.id,
+      },
+    });
   }
 
   private async updateMonthlySubscriptionStatus(
