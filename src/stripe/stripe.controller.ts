@@ -6,14 +6,16 @@ import {
   Headers,
   Req,
   BadRequestException,
+  RawBodyRequest,
   Get,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Users } from '@prisma/client';
+import { Request } from 'express';
 import { GetUser } from 'src/auth/auth.decorator';
 import { JwtAuthGuard } from 'src/auth/jwt-guard.guard';
 import { CreatePaymentIntentDto } from './dto/create-payment-intent.dto';
-import RequestWithRawBody from './request-with-raw-body.interface';
+// import RequestWithRawBody from './request-with-raw-body.interface';
 import { StripeService } from './stripe.service';
 
 @ApiTags('Stripe')
@@ -49,11 +51,11 @@ export class StripeController {
   @Post('webhook')
   @ApiOperation({
     summary:
-      'Webhook for stripe to do Users updates it needs to do. (Not for frontend devs). This is for stripe',
+      'Webhook for stripe to do user updates it needs to do. (Not for frontend devs). This is for stripe',
   })
   async handleIncomingEvents(
     @Headers('stripe-signature') signature: string,
-    @Req() request: RequestWithRawBody,
+    @Req() request: RawBodyRequest<Request>,
   ) {
     if (!signature) {
       throw new BadRequestException('Missing stripe-signature header');

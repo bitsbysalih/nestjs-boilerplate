@@ -5,12 +5,15 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
 
 import { AppModule } from './app.module';
-import validationOptions from './utils/validation-options';
+// import validationOptions from './utils/validation-options';
 import rawBodyMiddleware from './stripe/raw-body.middleware';
 import { PrismaService } from './prisma.service';
+// import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true,
+  });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   app.enableCors({
@@ -33,8 +36,9 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  app.use(rawBodyMiddleware());
+  //   app.use(rawBodyMiddleware());
 
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.enableShutdownHooks();
   app.setGlobalPrefix(configService.get('app.apiPrefix'), {
     exclude: ['/'],
@@ -42,8 +46,6 @@ async function bootstrap() {
   app.enableVersioning({
     type: VersioningType.URI,
   });
-
-  app.useGlobalPipes(new ValidationPipe(validationOptions));
 
   const options = new DocumentBuilder()
     .setTitle('API')

@@ -30,6 +30,8 @@ export class StripeService {
         case 'payment_intent.created':
           //   this.updateMonthlySubscriptionStatus(customerId, subscriptionStatus);
           break;
+        case 'payment_intent.succeeded':
+          console.log('Payment intent success');
         case 'customer.subscription.created':
           //   this.newMonthlySubscriptionStatus(
           //     customerId,
@@ -59,7 +61,6 @@ export class StripeService {
 
   async constructEventFromPayload(signature: string, payload: Buffer) {
     const webhookSecret = this.configService.get('stripe.webhookSecret');
-
     return this.stripe.webhooks.constructEvent(
       payload,
       signature,
