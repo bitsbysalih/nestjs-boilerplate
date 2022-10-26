@@ -22,6 +22,7 @@ async function bootstrap() {
       'https://card-viewer.vercel.app',
       'https://sailspad-card-viewer-bitsbysalih.vercel.app',
       'http://127.0.0.1:5173',
+      'http://127.0.0.1:5500',
       'http://192.168.1.108:5173',
       'https://sailspad-card-viewer.vercel.app',
       'https://sailspad-client-dev.vercel.app',
