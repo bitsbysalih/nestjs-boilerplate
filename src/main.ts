@@ -3,15 +3,14 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
+import { join } from 'path';
 
 import { AppModule } from './app.module';
-// import validationOptions from './utils/validation-options';
-import rawBodyMiddleware from './stripe/raw-body.middleware';
 import { PrismaService } from './prisma.service';
-// import { NestExpressApplication } from '@nestjs/platform-express';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     rawBody: true,
   });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
@@ -21,9 +20,6 @@ async function bootstrap() {
       'http://localhost:3000',
       'https://card-viewer.vercel.app',
       'https://sailspad-card-viewer-bitsbysalih.vercel.app',
-      'http://127.0.0.1:5173',
-      'http://127.0.0.1:5500',
-      'http://192.168.1.108:5173',
       'https://sailspad-card-viewer.vercel.app',
       'https://sailspad-client-dev.vercel.app',
       'https://www.sailspad.com',
@@ -37,8 +33,9 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  //   app.use(rawBodyMiddleware());
-
+  app.useStaticAssets(join(__dirname, '..', 'public'));
+  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.setViewEngine('hbs');
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.enableShutdownHooks();
   app.setGlobalPrefix(configService.get('app.apiPrefix'), {

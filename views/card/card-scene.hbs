@@ -1,0 +1,148 @@
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>{{card.name}}</title>
+    <script
+      src='https://cdn.jsdelivr.net/npm/mind-ar@1.1.5/dist/mindar-image.prod.js'
+    ></script>
+    <script src='https://aframe.io/releases/1.2.0/aframe.min.js'></script>
+    <script
+      src='https://cdn.jsdelivr.net/npm/mind-ar@1.1.5/dist/mindar-image-aframe.prod.js'
+    ></script>
+    <script
+      src='https://binzume.github.io/aframe-xylayout/dist/xylayout-all.min.js'
+    ></script>
+    <style>
+      .ar-container { width:100vw;height: 100vh;display: flex;flex-direction:
+      column;margin: 0 auto; }
+    </style>
+  </head>
+
+  <body>
+    <div class='ar-container'>
+      <a-scene
+        mindar-image='imageTargetSrc: {{marker}}'
+        color-space='sRGB'
+        renderer='colorManagement: true, physicallyCorrectLights'
+        vr-mode-ui='enabled: false'
+        device-orientation-permission-ui='enabled: false'
+      >
+        <a-assets>
+          <img id='card' src='/images/deep_sea.png' alt='' />
+          <img
+            id='profile'
+            className='profile-photo'
+            cross-origin='anonymous'
+            src={{card.cardImage}}
+            alt={{card.name}}
+          />
+
+          <img id='email' src='/icons/email.png' alt='email' />
+          <img id='snapchat' src='/icons/snapchat.png' alt='snapchat' />
+          <img id='instagram' src='/icons/instagram.png' alt='instagram' />
+          <img id='facebook' src='/icons/facebook.png' alt='facebook' />
+          <img id='github' src='/icons/github.png' alt='github' />
+          <img id='website' src='/icons/globe.png' alt='website' />
+          <img id='linkedin' src='/icons/linkedin.png' alt='linkedin' />
+          <img id='phone' src='/icons/phone.png' alt='phone' />
+          <img id='behance' src='/icons/behance.png' alt='behance' />
+          <img id='youtube' src='/icons/youtube.png' alt='youtube' />
+          <img id='twitter' src='/icons/twitter.png' alt='twitter' />
+          <img id='discord' src='/icons/discord.png' alt='discord' />
+          <img id='pinterest' src='/icons/pinterest.png' alt='pinterest' />
+          <img id='whatsapp' src='/icons/whatsapp.png' alt='whatsapp' />
+          <img id='telegram' src='/icons/telegram.png' alt='telegram' />
+          <img id='reddit' src='/icons/reddit.png' alt='reddit' />
+          <img id='tiktok' src='/icons/tiktok.png' alt='tiktok' />
+        </a-assets>
+
+        <a-camera
+          position='0 0 0'
+          look-controls='enabled: false'
+          cursor='fuse: false; rayOrigin: mouse;'
+          raycaster='far: 10000; objects: .clickable'
+        ></a-camera>
+
+        <a-entity mindar-image-target='targetIndex: 0'>
+          <a-image
+            src='#profile'
+            position='-0.59 1.275 0.05'
+            height='0.79'
+            width='0.79'
+            scale='0.8 0.7 0.7'
+          ></a-image>
+          <a-image
+            rotation='0 0 0'
+            position='0.0 0.5 0'
+            scale='2.0 2.25 2.0'
+            src='#card'
+            material='opacity: 0.7;'
+          ></a-image>
+
+          <a-entity>
+            <a-entity
+              align='left'
+              text='value:{{card.name}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; width: 3.2;'
+              position='1.55 1.18 0.05'
+              width='1.5'
+              color='white'
+              material='opacity: 0.0'
+            ></a-entity>
+            <a-entity
+              text='value:{{card.title}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-Regular.json;'
+              position='0.72 1.12 0.05'
+              height='auto'
+              width='1.5'
+              color='white'
+              geometry='primitive:plane; height: 0.1; width: 1.5;'
+              material='opacity: 0.0'
+            ></a-entity>
+          </a-entity>
+
+          <a-entity>
+            <a-entity
+              text='value:ABOUT; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; width: 2.2;'
+              position='0.27 0.58 0.05'
+              height='auto'
+              color='#ffffff'
+              geometry='primitive:plane; height: 0.6; width: 1.8;'
+              material='opacity: 0.0'
+            ></a-entity>
+            <a-entity
+              text="value:{{card.about}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; line-height: 50; width:1.7; height: 0.8; wrapCount: 62; negate:'false'"
+              position='0.04 0.38 0.05'
+              color='white'
+            ></a-entity>
+            <a-entity
+              text='value:CONTACT INFO; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; width: 2.2;'
+              align='left'
+              position='0.27 -0.04 0.05'
+              height='auto'
+              color='white'
+              geometry='primitive:plane; height: 0.1; width: 2;'
+              material='opacity: 0.0'
+            ></a-entity>
+          </a-entity>
+          <a-xycontainer
+            direction='row'
+            position='0 -0.18 0.05'
+            spacing='0.18'
+            justifyItems='space-around'
+          >
+            {{#each card.links}}
+              <a-image
+                onclick='widow.open({this.link})'
+                class='clickable'
+                src='#{{this.name}}'
+                height='0.2'
+                width='0.2'
+                animation='property: scale; to: 0.8 0.8 0.8;'
+              >
+              </a-image>
+            {{/each}}
+          </a-xycontainer>
+        </a-entity>
+      </a-scene>
+    </div>
+  </body>
+</html>

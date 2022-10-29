@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  Render,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -33,7 +34,7 @@ export class CardController {
       { name: 'cardImage', maxCount: 1 },
       { name: 'logoImage', maxCount: 1 },
       { name: 'backgroundImage', maxCount: 1 },
-      { name: 'cardBody', maxCount: 1 },
+      //   { name: 'cardBody', maxCount: 1 },
     ]),
   )
   @UseGuards(JwtAuthGuard)
@@ -77,6 +78,13 @@ export class CardController {
   @UseGuards(JwtAuthGuard)
   async getAllUsersCards(@GetUser() user: Users): Promise<Cards[]> {
     return await this.cardService.getAllUsersCards(user);
+  }
+
+  @Get('view')
+  @Render('card/card-scene')
+  async root(@Query('id') id: string) {
+    const card = await this.cardService.getCard(id);
+    return { card: card, marker: card.marker.markerFile };
   }
 
   @Get(':id/details')
