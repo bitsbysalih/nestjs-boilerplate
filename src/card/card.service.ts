@@ -154,10 +154,16 @@ export class CardService {
       let cardImageLink: string;
 
       if (files.cardImage) {
-        cardImageLink = await this.storageService.uploadFile(
-          files.cardImage[0].buffer,
-          files.cardImage[0].mimetype,
+        const uploadStream = await v2.uploader.upload_stream(
+          { folder: 'card images' },
+          function (error, result) {
+            console.log(error, result);
+            cardImageLink = result.secure_url;
+          },
         );
+        streamifier
+          .createReadStream(files.cardImage[0].buffer)
+          .pipe(uploadStream);
       } else {
         //Checks if card image has been updated before changing it
         if (updateCardDto.cardImage?.startsWith('data:')) {

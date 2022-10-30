@@ -5,7 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
 import { join } from 'path';
 import * as requestIp from 'request-ip';
-import helmet from 'helmet';
+// import helmet from 'helmet';
 
 import { AppModule } from './app.module';
 import { PrismaService } from './prisma.service';
