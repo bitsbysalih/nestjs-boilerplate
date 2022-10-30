@@ -71,7 +71,10 @@ export class UserService {
     try {
       let profilePhotoLink: string;
       if (profilePhoto) {
-        profilePhotoLink = await this.storageService.uploadFile(profilePhoto);
+        profilePhotoLink = await this.storageService.uploadFile(
+          profilePhoto.buffer,
+          profilePhoto.mimetype,
+        );
       }
       const updatedUser = await this.prisma.users.update({
         where: { id: user.id },

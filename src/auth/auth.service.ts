@@ -67,7 +67,10 @@ export class AuthService {
         throw new ConflictException('user with this email already exists');
       } else if (existingUser && !existingUser.isEmailVerified) {
         if (profilePhoto) {
-          profilePhotoUrl = await this.storageService.uploadFile(profilePhoto);
+          profilePhotoUrl = await this.storageService.uploadFile(
+            profilePhoto.buffer,
+            profilePhoto.mimetype,
+          );
         }
         user = await this.prisma.users.update({
           where: { email: signUpDto.email },
@@ -87,7 +90,10 @@ export class AuthService {
         return await this.returnAccountDetails(user);
       } else {
         if (profilePhoto) {
-          profilePhotoUrl = await this.storageService.uploadFile(profilePhoto);
+          profilePhotoUrl = await this.storageService.uploadFile(
+            profilePhoto.buffer,
+            profilePhoto.mimetype,
+          );
         }
         user = await this.prisma.users.create({
           data: {
