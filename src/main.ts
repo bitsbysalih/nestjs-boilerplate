@@ -4,6 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
 import { join } from 'path';
+import * as requestIp from 'request-ip';
+import helmet from 'helmet';
 
 import { AppModule } from './app.module';
 import { PrismaService } from './prisma.service';
@@ -28,6 +30,9 @@ async function bootstrap() {
       'https://ebc.sailspad.com',
     ],
   });
+
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
 
@@ -44,6 +49,33 @@ async function bootstrap() {
   app.enableVersioning({
     type: VersioningType.URI,
   });
+
+  app.use(requestIp.mw());
+
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: [`'self'`],
+          styleSrc: [
+            `'self'`,
+            `'unsafe-inline'`,
+            'cdn.jsdelivr.net',
+            'fonts.googleapis.com',
+            'img.icons8.com',
+          ],
+          fontSrc: [`'self'`, 'fonts.gstatic.com'],
+          imgSrc: [`'self'`, 'data:', 'cdn.jsdelivr.net', 'img.icons8.com'],
+          scriptSrc: [
+            `'self'`,
+            `https: 'unsafe-inline'`,
+            `cdn.jsdelivr.net`,
+            'img.icons8.com',
+          ],
+        },
+      },
+    }),
+  );
 
   const options = new DocumentBuilder()
     .setTitle('API')

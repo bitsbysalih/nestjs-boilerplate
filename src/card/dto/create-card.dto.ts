@@ -21,6 +21,18 @@ export class CreateCardDto {
   @IsOptional()
   shortName: string;
 
+  @IsString()
+  @IsOptional()
+  cardImage: string;
+
+  @IsString()
+  @IsOptional()
+  logoImage: string;
+
+  @IsString()
+  @IsOptional()
+  backgroundImage: string;
+
   @IsArray()
   links: [Link];
 

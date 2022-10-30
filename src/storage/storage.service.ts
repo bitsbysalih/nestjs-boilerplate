@@ -1,9 +1,15 @@
 import { nanoid } from 'nanoid';
-import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
+import { v2 } from 'cloudinary';
 
 export class StorageService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor() {
+    v2.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
+  }
 
   AWS_S3_BUCKET = process.env.AWS_DEFAULT_S3_BUCKET;
   s3 = new AWS.S3({
@@ -14,15 +20,8 @@ export class StorageService {
     region: process.env.AWS_S3_REGION,
   });
 
-  async uploadFile(file: Express.Multer.File) {
-    const { originalname } = file;
-
-    return await this.s3_upload(
-      file.buffer,
-      this.AWS_S3_BUCKET,
-      nanoid() + originalname,
-      file.mimetype,
-    );
+  async uploadFile(file: Buffer, mimetype: string) {
+    return await this.s3_upload(file, this.AWS_S3_BUCKET, nanoid(), mimetype);
   }
 
   async s3_upload(file: Buffer, bucket: any, name: string, mimetype: string) {

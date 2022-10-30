@@ -26,6 +26,18 @@ export class UpdateCardDto {
   @IsOptional()
   activeStatus?: string;
 
+  @IsString()
+  @IsOptional()
+  cardImage: string;
+
+  @IsString()
+  @IsOptional()
+  logoImage: string;
+
+  @IsString()
+  @IsOptional()
+  backgroundImage: string;
+
   @IsArray()
   @IsOptional()
   links?: [Link];

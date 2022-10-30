@@ -1,6 +1,9 @@
 import { BadRequestException, Injectable, UploadedFiles } from '@nestjs/common';
 import { Cards, Users } from '@prisma/client';
 import { customAlphabet } from 'nanoid';
+import { v2 } from 'cloudinary';
+// import { utils, write } from 'xlsx';
+import * as dataUriToBuffer from 'data-uri-to-buffer';
 
 //service imports
 import { StorageService } from '../storage/storage.service';
@@ -15,7 +18,13 @@ export class CardService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly storageService: StorageService,
-  ) {}
+  ) {
+    v2.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
+  }
   async create(
     user: Users,
     createCardDto: CreateCardDto,
@@ -31,21 +40,64 @@ export class CardService {
 
       let backgroundImageLink: string;
       let logoImageLink: string;
+      let cardImageLink: string;
 
-      const cardImageLink = await this.storageService.uploadFile(
-        files.cardImage[0],
-      );
+      //Checks if card image file object or data uri string was uploaded
+      if (files.cardImage) {
+        //uploads file buffer to aws
+        cardImageLink = await this.storageService.uploadFile(
+          files.cardImage[0].buffer,
+          files.cardImage[0].mimetype,
+        );
+      } else {
+        //uploads data uri to cloudinary
+        await v2.uploader
+          .upload(createCardDto.cardImage, {
+            transformation: [{ radius: 50 }],
+            format: 'png',
+            secure: true,
+          })
+          .then((result) => (cardImageLink = result.secure_url));
+      }
 
+      //Checks if background image file object or data uri string was uploaded
       if (files.backgroundImage) {
+        //uploads file buffer to aws
         backgroundImageLink = await this.storageService.uploadFile(
-          files.backgroundImage[0],
+          files.backgroundImage[0].buffer,
+          files.backgroundImage[0].mimetype,
         );
+      } else {
+        //converts data uri to buffer then uploads to aws
+        if (createCardDto.backgroundImage) {
+          const cardImageBuffer = dataUriToBuffer(
+            createCardDto.backgroundImage,
+          );
+          backgroundImageLink = await this.storageService.uploadFile(
+            cardImageBuffer,
+            cardImageBuffer.type,
+          );
+        }
       }
+
+      //Checks if logo image file object or data uri string was uploaded
       if (files.logoImage) {
+        //uploads file buffer to aws
         logoImageLink = await this.storageService.uploadFile(
-          files.logoImage[0],
+          files.logoImage[0].buffer,
+          files.logoImage[0].mimetype,
         );
+      } else {
+        if (createCardDto.logoImage) {
+          //converts data uri to buffer then uploads to aws
+          const cardImageBuffer = dataUriToBuffer(createCardDto.logoImage);
+          logoImageLink = await this.storageService.uploadFile(
+            cardImageBuffer,
+            cardImageBuffer.type,
+          );
+        }
       }
+
       const marker = await this.prisma.markers.findFirst({});
       const newCard = await this.prisma.cards.create({
         data: {
@@ -70,7 +122,7 @@ export class CardService {
               },
         },
       });
-      await this.reduceCardCount(user.id, user.availableCardSlots - 1);
+      await this.changeCardCount(user.id, user.availableCardSlots - 1);
       return newCard;
     } catch (error) {
       console.log(error.message);
@@ -95,18 +147,54 @@ export class CardService {
 
       if (files.cardImage) {
         cardImageLink = await this.storageService.uploadFile(
-          files.cardImage[0],
+          files.cardImage[0].buffer,
+          files.cardImage[0].mimetype,
         );
+      } else {
+        //Checks if card image has been updated before changing it
+        if (updateCardDto.cardImage?.startsWith('data:')) {
+          await v2.uploader
+            .upload(updateCardDto.cardImage, {
+              transformation: [{ radius: 50 }],
+              format: 'png',
+              secure: true,
+            })
+            .then((result) => (cardImageLink = result.secure_url));
+        }
       }
+
       if (files.backgroundImage) {
         backgroundImageLink = await this.storageService.uploadFile(
-          files.backgroundImage[0],
+          files.backgroundImage[0].buffer,
+          files.backgroundImage[0].mimetype,
         );
+      } else {
+        if (updateCardDto.backgroundImage?.startsWith('data:')) {
+          //converts data uri to buffer then uploads to aws
+          const cardImageBuffer = dataUriToBuffer(
+            updateCardDto.backgroundImage,
+          );
+          backgroundImageLink = await this.storageService.uploadFile(
+            cardImageBuffer,
+            cardImageBuffer.type,
+          );
+        }
       }
+
       if (files.logoImage) {
         logoImageLink = await this.storageService.uploadFile(
-          files.logoImage[0],
+          files.logoImage[0].buffer,
+          files.logoImage[0].mimetype,
         );
+      } else {
+        if (updateCardDto.logoImage?.startsWith('data:')) {
+          //converts data uri to buffer then uploads to aws
+          const cardImageBuffer = dataUriToBuffer(updateCardDto.logoImage);
+          logoImageLink = await this.storageService.uploadFile(
+            cardImageBuffer,
+            cardImageBuffer.type,
+          );
+        }
       }
 
       const cardToUpdate = await this.prisma.cards.update({
@@ -130,9 +218,10 @@ export class CardService {
     }
   }
 
-  async deleteCard(id: string) {
+  async deleteCard(id: string, user: Users) {
     try {
       await this.prisma.cards.delete({ where: { id } });
+      await this.changeCardCount(user.id, user.availableCardSlots + 1);
       return { cardDeleted: true };
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -173,10 +262,12 @@ export class CardService {
       const nanoid = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUV', 5);
 
       const fileName = await this.storageService.uploadFile(
-        files.markerFile[0],
+        files.markerFile[0].buffer,
+        files.markerFile[0].mimetype,
       );
       const imageName = await this.storageService.uploadFile(
-        files.markerImage[0],
+        files.markerImage[0].buffer,
+        files.markerImage[0].mimetype,
       );
 
       const marker = await this.prisma.markers.create({
@@ -205,10 +296,12 @@ export class CardService {
       const nanoid = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUV', 5);
 
       const fileName = await this.storageService.uploadFile(
-        files.markerFile[0],
+        files.markerFile[0].buffer,
+        files.markerFile[0].mimetype,
       );
       const imageName = await this.storageService.uploadFile(
-        files.markerImage[0],
+        files.markerImage[0].buffer,
+        files.markerImage[0].mimetype,
       );
 
       const marker = await this.prisma.markers.create({
@@ -290,7 +383,7 @@ export class CardService {
     }
   }
 
-  async reduceCardCount(id: string, newCount: number) {
+  async changeCardCount(id: string, newCount: number) {
     try {
       await this.prisma.users.update({
         where: { id },

@@ -46,7 +46,7 @@ export class CardController {
       cardImage?: Express.Multer.File;
       logoImage?: Express.Multer.File;
       backgroundImage?: Express.Multer.File;
-      cardBody?: Express.Multer.File;
+      //   cardBody?: Express.Multer.File;
     },
   ) {
     return await this.cardService.create(user, createCardDto, files);
@@ -94,8 +94,8 @@ export class CardController {
 
   @Delete(':id/delete')
   @UseGuards(JwtAuthGuard)
-  async deleteCard(@Param('id') id: string) {
-    return await this.cardService.deleteCard(id);
+  async deleteCard(@Param('id') id: string, @GetUser() user: Users) {
+    return await this.cardService.deleteCard(id, user);
   }
 
   @Post('marker')
