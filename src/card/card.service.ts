@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, UploadedFiles } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  UploadedFiles,
+} from '@nestjs/common';
 import { Cards, Users } from '@prisma/client';
 import { customAlphabet } from 'nanoid';
 import { UploadApiErrorResponse, UploadApiResponse, v2 } from 'cloudinary';
@@ -245,6 +250,20 @@ export class CardService {
       return card;
     } catch (error) {
       throw new BadRequestException(error.message);
+    }
+  }
+
+  async isShortNameAvailable(shortName: string) {
+    try {
+      const checkShortName = await this.prisma.cards.findUnique({
+        where: { shortName },
+      });
+      if (checkShortName) {
+        throw new ConflictException('shortname already used');
+      }
+      return true;
+    } catch (e) {
+      throw new BadRequestException('Error checking shortname', e.message);
     }
   }
 

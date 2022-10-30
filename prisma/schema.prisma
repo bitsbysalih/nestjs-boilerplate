@@ -33,21 +33,22 @@ model Users {
 }
 
 model Cards {
-    id              String  @id @default(cuid()) @map("_id")
+    id              String   @id @default(cuid()) @map("_id")
     name            String?
     title           String?
     about           String?
     email           String?
     uniqueId        String?
-    activeStatus    Boolean @default(true)
+    activeStatus    Boolean  @default(true)
     cardImage       String?
     logoImage       String?
     backgroundImage String?
     cardBodyImage   String?
-    shortName       String?
+    shortName       String   @unique
     userId          String
     links           Link[]
     marker          Marker?
+    createdAt       DateTime @default(now())
 }
 
 model RefreshTokens {
