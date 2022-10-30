@@ -65,7 +65,14 @@ async function bootstrap() {
             'img.icons8.com',
           ],
           fontSrc: [`'self'`, 'fonts.gstatic.com'],
-          imgSrc: [`'self'`, 'data:', 'cdn.jsdelivr.net', 'img.icons8.com'],
+          imgSrc: [
+            `'self'`,
+            'data:',
+            'cdn.jsdelivr.net',
+            'img.icons8.com',
+            'sailspad.fra1.digitaloceanspaces.com',
+            'res.cloudinary.com',
+          ],
           scriptSrc: [
             `'self'`,
             `https: 'unsafe-inline'`,
