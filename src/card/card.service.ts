@@ -4,6 +4,7 @@ import { customAlphabet } from 'nanoid';
 import { v2 } from 'cloudinary';
 // import { utils, write } from 'xlsx';
 import * as dataUriToBuffer from 'data-uri-to-buffer';
+import streamifier from 'streamifier';
 
 //service imports
 import { StorageService } from '../storage/storage.service';
@@ -45,10 +46,17 @@ export class CardService {
       //Checks if card image file object or data uri string was uploaded
       if (files.cardImage) {
         //uploads file buffer to aws
-        cardImageLink = await this.storageService.uploadFile(
-          files.cardImage[0].buffer,
-          files.cardImage[0].mimetype,
+        const uploadStream = await v2.uploader.upload_stream(
+          { folder: 'test' },
+          function (error, result) {
+            console.log(error, result);
+            cardImageLink = result.secure_url;
+          },
         );
+
+        streamifier
+          .createReadStream(files.cardImage[0].buffer)
+          .pipe(uploadStream);
       } else {
         //uploads data uri to cloudinary
         await v2.uploader
