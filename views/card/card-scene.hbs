@@ -17,6 +17,10 @@
       .ar-container { width:100vw;height: 100vh;display: flex;flex-direction:
       column;margin: 0 auto; }
     </style>
+
+    <script src='/scripts/main.js'>
+
+    </script>
   </head>
 
   <body>
@@ -132,7 +136,7 @@
           >
             {{#each card.links}}
               <a-image
-                onclick='widow.open({this.link})'
+                onclick=''
                 class='clickable'
                 src='#{{this.name}}'
                 height='0.2'

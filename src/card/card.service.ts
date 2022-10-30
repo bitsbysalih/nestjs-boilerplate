@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable, UploadedFiles } from '@nestjs/common';
 import { Cards, Users } from '@prisma/client';
 import { customAlphabet } from 'nanoid';
-import { v2 } from 'cloudinary';
+import { UploadApiErrorResponse, UploadApiResponse, v2 } from 'cloudinary';
 // import { utils, write } from 'xlsx';
 import * as dataUriToBuffer from 'data-uri-to-buffer';
 import streamifier from 'streamifier';
+import toStream = require('buffer-to-stream');
 
 //service imports
 import { StorageService } from '../storage/storage.service';
@@ -46,17 +47,8 @@ export class CardService {
       //Checks if card image file object or data uri string was uploaded
       if (files.cardImage) {
         //uploads file buffer to cloudinary and adds 50px radius transform to image
-        const uploadStream = await v2.uploader.upload_stream(
-          { folder: 'test' },
-          function (error, result) {
-            console.log(error, result);
-            cardImageLink = result.secure_url;
-          },
-        );
-
-        streamifier
-          .createReadStream(files.cardImage[0].buffer)
-          .pipe(uploadStream);
+        cardImageLink = (await this.uploadImageToCloudinary(files.cardImage[0]))
+          .secure_url;
       } else {
         //uploads data uri to cloudinary
         await v2.uploader
@@ -154,16 +146,8 @@ export class CardService {
       let cardImageLink: string;
 
       if (files.cardImage) {
-        const uploadStream = await v2.uploader.upload_stream(
-          { folder: 'card images' },
-          function (error, result) {
-            console.log(error, result);
-            cardImageLink = result.secure_url;
-          },
-        );
-        streamifier
-          .createReadStream(files.cardImage[0].buffer)
-          .pipe(uploadStream);
+        cardImageLink = (await this.uploadImageToCloudinary(files.cardImage[0]))
+          .secure_url;
       } else {
         //Checks if card image has been updated before changing it
         if (updateCardDto.cardImage?.startsWith('data:')) {
@@ -406,5 +390,24 @@ export class CardService {
     } catch (error) {
       throw new BadRequestException(error.message);
     }
+  }
+
+  async uploadImageToCloudinary(
+    file: Express.Multer.File,
+  ): Promise<UploadApiResponse | UploadApiErrorResponse> {
+    return new Promise((resolve, reject) => {
+      const upload = v2.uploader.upload_stream(
+        {
+          transformation: [{ radius: 50 }],
+          format: 'png',
+          secure: true,
+        },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        },
+      );
+      toStream(file.buffer).pipe(upload);
+    });
   }
 }
