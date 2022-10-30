@@ -52,37 +52,37 @@ async function bootstrap() {
 
   app.use(requestIp.mw());
 
-  app.use(
-    helmet({
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: [`'self'`],
-          styleSrc: [
-            `'self'`,
-            `'unsafe-inline'`,
-            'cdn.jsdelivr.net',
-            'fonts.googleapis.com',
-            'img.icons8.com',
-          ],
-          fontSrc: [`'self'`, 'fonts.gstatic.com'],
-          imgSrc: [
-            `'self'`,
-            'data:',
-            'cdn.jsdelivr.net',
-            'img.icons8.com',
-            'sailspad.fra1.digitaloceanspaces.com',
-            'res.cloudinary.com',
-          ],
-          scriptSrc: [
-            `'self'`,
-            `https: 'unsafe-inline'`,
-            `cdn.jsdelivr.net`,
-            'img.icons8.com',
-          ],
-        },
-      },
-    }),
-  );
+  //   app.use(
+  //     helmet({
+  //       contentSecurityPolicy: {
+  //         directives: {
+  //           defaultSrc: [`'self'`],
+  //           styleSrc: [
+  //             `'self'`,
+  //             `'unsafe-inline'`,
+  //             'cdn.jsdelivr.net',
+  //             'fonts.googleapis.com',
+  //             'img.icons8.com',
+  //           ],
+  //           fontSrc: [`'self'`, 'fonts.gstatic.com'],
+  //           imgSrc: [
+  //             `'self'`,
+  //             'data:',
+  //             'cdn.jsdelivr.net',
+  //             'img.icons8.com',
+  //             'sailspad.fra1.digitaloceanspaces.com',
+  //             'res.cloudinary.com',
+  //           ],
+  //           scriptSrc: [
+  //             `'self'`,
+  //             `https: 'unsafe-inline'`,
+  //             `cdn.jsdelivr.net`,
+  //             'img.icons8.com',
+  //           ],
+  //         },
+  //       },
+  //     }),
+  //   );
 
   const options = new DocumentBuilder()
     .setTitle('API')
