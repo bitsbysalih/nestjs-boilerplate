@@ -45,7 +45,7 @@ export class CardService {
 
       //Checks if card image file object or data uri string was uploaded
       if (files.cardImage) {
-        //uploads file buffer to aws
+        //uploads file buffer to cloudinary and adds 50px radius transform to image
         const uploadStream = await v2.uploader.upload_stream(
           { folder: 'test' },
           function (error, result) {
