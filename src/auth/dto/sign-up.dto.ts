@@ -3,6 +3,8 @@ import { Transform } from 'class-transformer';
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
+  IsPhoneNumber,
   IsString,
   Matches,
   MaxLength,
@@ -24,6 +26,7 @@ export class SignUpDto {
   @IsString()
   @ApiProperty({ example: 'Gardener', description: "New Users's Job title" })
   @MaxLength(20)
+  @IsOptional()
   jobTitle: string;
 
   @IsEmail()
@@ -44,4 +47,12 @@ export class SignUpDto {
 
   @ApiProperty({ description: "New Users's Profile photo" })
   profilePhoto: Express.Multer.File;
+
+  @IsString()
+  @IsOptional()
+  dateOfBirth: string;
+
+  @IsPhoneNumber()
+  @IsOptional()
+  phoneNumber: string;
 }

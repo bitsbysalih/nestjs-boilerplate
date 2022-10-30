@@ -13,14 +13,15 @@ model Users {
     firstName                 String
     lastName                  String
     password                  String
-    jobTitle                  String
-    dateOfBirth               DateTime?
+    jobTitle                  String?
+    dateOfBirth               String?
     phoneNumber               String?
     profilePhoto              String?
     email                     String    @unique
     isEmailVerified           Boolean   @default(false)
     stripeCustomerId          String?   @unique
     monthlySubscriptionStatus String?
+    joinedOn                  DateTime? @default(now())
     subscriptionId            String?
     canAddLogo                Boolean?  @default(false)
     canAddBackground          Boolean?  @default(false)
@@ -33,22 +34,22 @@ model Users {
 }
 
 model Cards {
-    id              String   @id @default(cuid()) @map("_id")
+    id              String    @id @default(cuid()) @map("_id")
     name            String?
     title           String?
     about           String?
     email           String?
     uniqueId        String?
-    activeStatus    Boolean  @default(true)
+    activeStatus    Boolean   @default(true)
     cardImage       String?
     logoImage       String?
     backgroundImage String?
     cardBodyImage   String?
-    shortName       String   @unique
+    shortName       String    @unique
     userId          String
     links           Link[]
     marker          Marker?
-    createdAt       DateTime @default(now())
+    createdAt       DateTime? @default(now())
 }
 
 model RefreshTokens {
@@ -61,7 +62,7 @@ model Markers {
     id          String  @id @default(cuid()) @map("_id")
     markerImage String
     markerFile  String
-    uniqueId    String
+    uniqueId    String  @unique
     userId      String?
     user        Users?  @relation(fields: [userId], references: [id])
 }

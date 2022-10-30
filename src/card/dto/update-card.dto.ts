@@ -38,7 +38,6 @@ export class UpdateCardDto {
   @IsOptional()
   backgroundImage: string;
 
-  @IsArray()
   @IsOptional()
   links?: [Link];
 

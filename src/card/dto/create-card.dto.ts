@@ -33,9 +33,9 @@ export class CreateCardDto {
   @IsOptional()
   backgroundImage: string;
 
-  @IsArray()
+  @IsOptional()
   links: [Link];
 
   @IsOptional()
-  marker: Marker;
+  marker: any;
 }

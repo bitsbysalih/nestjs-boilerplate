@@ -20,6 +20,9 @@ import { JwtAuthGuard } from '../auth/jwt-guard.guard';
 
 //Services imports
 import { CardService } from './card.service';
+
+//DTO imports
+import { CheckShortNameDto } from './dto/check-short-name.dto';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 
@@ -80,6 +83,14 @@ export class CardController {
     return await this.cardService.getAllUsersCards(user);
   }
 
+  @Post('/check-short-name')
+  async checkShortName(@Body() checkShortNameDto: CheckShortNameDto) {
+    const isShortNameAvailable = await this.cardService.isShortNameAvailable(
+      checkShortNameDto,
+    );
+    return isShortNameAvailable;
+  }
+
   @Get('view')
   @Render('card/card-scene')
   async root(@Query('id') id: string) {
@@ -115,6 +126,12 @@ export class CardController {
     },
   ) {
     return await this.cardService.markerUpload(user, files);
+  }
+
+  @Post('/marker/:id/delete')
+  @UseGuards(JwtAuthGuard)
+  async deleteMarker(@Param('id') id: string) {
+    return await this.cardService.deleteMarker(id);
   }
 
   @Post('/mobile-marker-upload')

@@ -9,7 +9,6 @@ import { customAlphabet } from 'nanoid';
 import { UploadApiErrorResponse, UploadApiResponse, v2 } from 'cloudinary';
 // import { utils, write } from 'xlsx';
 import * as dataUriToBuffer from 'data-uri-to-buffer';
-import streamifier from 'streamifier';
 import toStream = require('buffer-to-stream');
 
 //service imports
@@ -19,6 +18,7 @@ import { PrismaService } from '../prisma.service';
 //DTO imports
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
+import { CheckShortNameDto } from './dto/check-short-name.dto';
 
 @Injectable()
 export class CardService {
@@ -102,24 +102,36 @@ export class CardService {
           );
         }
       }
-
+      const parsedMarkerData =
+        typeof createCardDto?.marker !== 'object' &&
+        JSON.parse(createCardDto?.marker);
       const marker = await this.prisma.markers.findFirst({});
       const newCard = await this.prisma.cards.create({
         data: {
           ...createCardDto,
+          links: Array.isArray(createCardDto.links)
+            ? createCardDto.links
+            : JSON.parse(createCardDto.links),
+          email: createCardDto.email ? createCardDto.email : user.email,
           cardImage: cardImageLink,
           backgroundImage: backgroundImageLink,
           logoImage: logoImageLink,
           activeStatus: Boolean(createCardDto.activeStatus) || true,
           uniqueId: nanoid(),
-          shortName: nanoid(),
+          shortName: createCardDto.shortName || nanoid(),
           userId: user.id,
           marker: createCardDto.marker
-            ? {
-                uniqueId: createCardDto.marker.uniqueId,
-                markerFile: createCardDto.marker.markerFile,
-                markerImage: createCardDto.marker.markerImage,
-              }
+            ? typeof createCardDto?.marker === 'object'
+              ? {
+                  uniqueId: createCardDto.marker.uniqueId,
+                  markerFile: createCardDto.marker.markerFile,
+                  markerImage: createCardDto.marker.markerImage,
+                }
+              : {
+                  uniqueId: parsedMarkerData.uniqueId,
+                  markerFile: parsedMarkerData.markerFile,
+                  markerImage: parsedMarkerData.markerImage,
+                }
             : {
                 uniqueId: marker.uniqueId,
                 markerFile: marker.markerFile,
@@ -200,19 +212,32 @@ export class CardService {
         }
       }
 
+      const parsedMarkerData =
+        typeof updateCardDto?.marker !== 'object' &&
+        JSON.parse(updateCardDto?.marker);
       const cardToUpdate = await this.prisma.cards.update({
         where: { id },
         data: {
           ...updateCardDto,
+          links: Array.isArray(updateCardDto.links)
+            ? updateCardDto.links
+            : JSON.parse(updateCardDto.links),
           activeStatus: updateCardDto.activeStatus == 'true' ? true : false,
           cardImage: cardImageLink && cardImageLink,
           backgroundImage: backgroundImageLink && backgroundImageLink,
           logoImage: logoImageLink && logoImageLink,
-          marker: {
-            uniqueId: updateCardDto.marker.uniqueId,
-            markerFile: updateCardDto.marker.markerFile,
-            markerImage: updateCardDto.marker.markerImage,
-          },
+          marker:
+            updateCardDto.marker && typeof updateCardDto?.marker === 'object'
+              ? {
+                  uniqueId: updateCardDto.marker.uniqueId,
+                  markerFile: updateCardDto.marker.markerFile,
+                  markerImage: updateCardDto.marker.markerImage,
+                }
+              : {
+                  uniqueId: parsedMarkerData.uniqueId,
+                  markerFile: parsedMarkerData.markerFile,
+                  markerImage: parsedMarkerData.markerImage,
+                },
         },
       });
       return cardToUpdate;
@@ -253,10 +278,10 @@ export class CardService {
     }
   }
 
-  async isShortNameAvailable(shortName: string) {
+  async isShortNameAvailable(checkShortNameDto: CheckShortNameDto) {
     try {
       const checkShortName = await this.prisma.cards.findUnique({
-        where: { shortName },
+        where: { shortName: checkShortNameDto.shortName },
       });
       if (checkShortName) {
         throw new ConflictException('shortname already used');
@@ -296,6 +321,17 @@ export class CardService {
         },
       });
       return marker;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async deleteMarker(id: string) {
+    try {
+      const markerToDelete = await this.prisma.markers.delete({
+        where: { uniqueId: id },
+      });
+      return markerToDelete;
     } catch (error) {
       throw new BadRequestException(error.message);
     }

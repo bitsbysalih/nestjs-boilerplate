@@ -1,9 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import Stripe from 'stripe';
-import { ConfigService } from '@nestjs/config';
-import { CreatePaymentIntentDto } from './dto/create-payment-intent.dto';
 import { Users } from '@prisma/client';
+
+import Stripe from 'stripe';
+
+//Service imports
+import { ConfigService } from '@nestjs/config';
+import { MailService } from 'src/mail/mail.service';
+
+//DTO imports
+import { CreatePaymentIntentDto } from './dto/create-payment-intent.dto';
 
 @Injectable()
 export class StripeService {
@@ -11,6 +17,7 @@ export class StripeService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
+    private mailService: MailService,
   ) {
     this.stripe = new Stripe(this.configService.get('stripe.secretKey'), {
       apiVersion: '2022-08-01',
@@ -37,7 +44,6 @@ export class StripeService {
           );
           break;
         case 'payment_intent.succeeded':
-          console.log('Payment intent success');
         case 'customer.subscription.created':
           await this.newMonthlySubscriptionStatus(
             customerId,
@@ -50,10 +56,10 @@ export class StripeService {
             customerId,
             subscriptionStatus,
           );
-          //   this.sendCancellationEmail(data);
+          this.sendCancellationEmail(data);
           break;
         case 'invoice.payment_succeeded':
-          //   await this.sendSubscriptionInvoiceEmail(data);
+          await this.sendSubscriptionInvoiceEmail(data);
           await this.updateCardSlotsCount(
             customerId,
             data.lines.data[0].quantity.toString(),
@@ -134,13 +140,16 @@ export class StripeService {
         ephemeralKey,
       };
     } catch (error) {
-      console.log(error);
       throw new BadRequestException(
         'Error creating subscription',
         error.message,
       );
     }
   }
+
+  //   async cancelMonthlySubscription(customerId: string) {
+  //     return this.stripe.subscriptions.cancel({});
+  //   }
 
   async setCardToDefault(data: any) {
     try {
@@ -212,9 +221,6 @@ export class StripeService {
     customerId: string,
     monthlySubscriptionStatus: string,
   ) {
-    console.log(customerId);
-    console.log(monthlySubscriptionStatus);
-
     return await this.prisma.users.update({
       where: { stripeCustomerId: customerId },
       data: { monthlySubscriptionStatus },
@@ -242,5 +248,49 @@ export class StripeService {
     } catch (error) {
       throw new BadRequestException(error.message);
     }
+  }
+
+  private async sendSubscriptionInvoiceEmail(data: any) {
+    const amountPaid = (data.total / 100).toString();
+    const quantity = data.lines.data[0].quantity.toString();
+    const nextBillDate = new Date(
+      data.lines.data[0].period.end * 1000,
+    ).toLocaleDateString('en-GB');
+
+    switch (data.billing_reason) {
+      case 'subscription_create':
+        await this.mailService.sendNewSubscriptionEmail(
+          data.customer_name.split(' ')[0],
+          data.customer_email,
+          amountPaid,
+          quantity,
+          nextBillDate,
+          data.invoice_pdf,
+        );
+        break;
+      case 'subscription_update':
+        await this.mailService.sendSubscriptionUpdateEmail(
+          data.customer_name.split(' ')[0],
+          data.customer_email,
+          amountPaid,
+          quantity,
+          nextBillDate,
+          data.invoice_pdf,
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
+  private async sendCancellationEmail(data: any) {
+    const user = await this.prisma.users.findUnique({
+      where: { stripeCustomerId: data.customer },
+    });
+
+    await this.mailService.sendSubscriptionCancellationEmail(
+      user.firstName,
+      user.email,
+    );
   }
 }
