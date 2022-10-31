@@ -37,7 +37,6 @@ export class CardController {
       { name: 'cardImage', maxCount: 1 },
       { name: 'logoImage', maxCount: 1 },
       { name: 'backgroundImage', maxCount: 1 },
-      //   { name: 'cardBody', maxCount: 1 },
     ]),
   )
   @UseGuards(JwtAuthGuard)
@@ -49,7 +48,6 @@ export class CardController {
       cardImage?: Express.Multer.File;
       logoImage?: Express.Multer.File;
       backgroundImage?: Express.Multer.File;
-      //   cardBody?: Express.Multer.File;
     },
   ) {
     return await this.cardService.create(user, createCardDto, files);
