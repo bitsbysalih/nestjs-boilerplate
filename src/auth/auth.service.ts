@@ -133,7 +133,6 @@ export class AuthService {
           email: loginDto.email,
         },
       });
-
       if (!user || !user.isEmailVerified) {
         throw new NotFoundException('User not found');
       }

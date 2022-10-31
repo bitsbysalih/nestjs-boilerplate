@@ -46,7 +46,7 @@ model Cards {
     backgroundImage String?
     cardBodyImage   String?
     shortName       String    @unique
-    userId          String
+    userId          String    @db.ObjectId
     links           Link[]
     marker          Marker?
     createdAt       DateTime? @default(now())
@@ -63,7 +63,7 @@ model Markers {
     markerImage String
     markerFile  String
     uniqueId    String  @unique
-    userId      String?
+    userId      String? @db.ObjectId
     user        Users?  @relation(fields: [userId], references: [id])
 }
 
