@@ -9,7 +9,7 @@ datasource db {
 }
 
 model Users {
-    id                        String    @id @default(cuid()) @map("_id")
+    id                        String    @id @default(auto()) @map("_id") @db.ObjectId
     firstName                 String
     lastName                  String
     password                  String
@@ -34,7 +34,7 @@ model Users {
 }
 
 model Cards {
-    id              String    @id @default(cuid()) @map("_id")
+    id              String    @id @default(auto()) @map("_id") @db.ObjectId
     name            String?
     title           String?
     about           String?
@@ -53,13 +53,13 @@ model Cards {
 }
 
 model RefreshTokens {
-    id    String @id @default(cuid()) @map("_id")
+    id    String @id @default(auto()) @map("_id") @db.ObjectId
     email String
     token String @unique
 }
 
 model Markers {
-    id          String  @id @default(cuid()) @map("_id")
+    id          String  @id @default(auto()) @map("_id") @db.ObjectId
     markerImage String
     markerFile  String
     uniqueId    String  @unique
@@ -68,7 +68,7 @@ model Markers {
 }
 
 model StripeEvents {
-    id    String   @id @default(cuid()) @map("_id")
+    id    String   @id @default(auto()) @map("_id") @db.ObjectId
     time  DateTime @default(now())
     event String
 }
