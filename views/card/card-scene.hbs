@@ -18,12 +18,17 @@
 
   <body>
     <a-scene
-      mindar-image='imageTargetSrc: https://sailspad.fra1.digitaloceanspaces.com/targets%20%281%29.mind;'
+      mindar-image='imageTargetSrc: {{this.marker}};'
       vr-mode-ui='enabled: false'
       device-orientation-permission-ui='enabled: false'
     >
       <a-assets>
-        <img id='card' src={{cardImage}} />
+        <img id='profile' src={{cardImage}} />
+        <img
+          id='card'
+          src='https://res.cloudinary.com/salihudev/image/upload/v1667429808/deep_sea_tr9j9u.png'
+          alt=''
+        />
         <a-asset-item
           id='avatarModel'
           src='https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.5/examples/image-tracking/assets/card-example/softmind/scene.gltf'
@@ -39,14 +44,75 @@
 
       <a-entity mindar-image-target='targetIndex: 0'>
         <a-plane
-          src='#card'
+          src='#profile'
           position='-0.59 1.275 0.05'
           height='0.79'
           width='0.79'
           scale='0.8 0.7 0.7'
           rotation='0 0 0'
+          material='opacity: 0.7;'
         ></a-plane>
-
+        <a-entity>
+          <a-entity
+            align='left'
+            text='value:{{name}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; width: 3.2;'
+            position='1.55 1.18 0.05'
+            width='1.5'
+            color='white'
+            material='opacity: 0.0'
+          ></a-entity>
+          <a-entity
+            text='value:{{title}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-Regular.json;'
+            position='0.72 1.12 0.05'
+            height='auto'
+            width='1.5'
+            color='white'
+            geometry='primitive:plane; height: 0.1; width: 1.5;'
+            material='opacity: 0.0'
+          ></a-entity>
+        </a-entity>
+        <a-entity>
+          <a-entity
+            text='value:ABOUT; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; width: 2.2;'
+            position='0.27 0.58 0.05'
+            height='auto'
+            color='#ffffff'
+            geometry='primitive:plane; height: 0.6; width: 1.8;'
+            material='opacity: 0.0'
+          ></a-entity>
+          <a-entity
+            text="value:{{about}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; line-height: 50; width:1.7; height: 0.8; wrapCount: 62; negate:'false'"
+            position='0.04 0.38 0.05'
+            color='white'
+          ></a-entity>
+          <a-entity
+            text='value:CONTACT INFO; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; width: 2.2;'
+            align='left'
+            position='0.27 -0.04 0.05'
+            height='auto'
+            color='white'
+            geometry='primitive:plane; height: 0.1; width: 2;'
+            material='opacity: 0.0'
+          ></a-entity>
+        </a-entity>
+        <a-xycontainer
+          direction='row'
+          position='0 -0.18 0.05'
+          spacing='0.18'
+          justifyItems='space-around'
+        >
+          {{#each links}}
+            <a-image
+              onclick="window.open('{{this.link}}','_blank')"
+              class='clickable'
+              src='#{{this.name}}'
+              height='0.2'
+              width='0.2'
+              animation='property: scale; to: 0.8 0.8 0.8;'
+            >
+            </a-image>
+          {{/each}}
+        </a-xycontainer>
       </a-entity>
     </a-scene>
   </body>
