@@ -10,9 +10,9 @@
     <script
       src='https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.0.0/dist/mindar-image-aframe.prod.js'
     ></script>
-    {{! <script
+    <script
       src='https://binzume.github.io/aframe-xylayout/dist/xylayout-all.min.js'
-    ></script> }}
+    ></script>
     <style>
       .ar-container { width:100vw;height: 100vh;display: flex;flex-direction:
       column;margin: 0 auto; }
@@ -24,6 +24,8 @@
       <a-scene
         mindar-image='imageTargetSrc: {{marker}}'
         color-space='sRGB'
+        embedded='enabled:true'
+        loading-screen='dotsColor: #1E2D3D; backgroundColor: #1E2D3D'
         renderer='colorManagement: true, physicallyCorrectLights'
         vr-mode-ui='enabled: false'
         device-orientation-permission-ui='enabled: false'
@@ -33,7 +35,7 @@
           <img
             id='profile'
             class='profile-photo'
-            cross-origin='anonymous'
+            crossorigin='anonymous'
             src={{cardImage}}
             alt={{name}}
           />
@@ -124,7 +126,7 @@
               material='opacity: 0.0'
             ></a-entity>
           </a-entity>
-          {{!-- <a-xycontainer
+          <a-xycontainer
             direction='row'
             position='0 -0.18 0.05'
             spacing='0.18'
@@ -141,7 +143,7 @@
               >
               </a-image>
             {{/each}}
-          </a-xycontainer> --}}
+          </a-xycontainer>
         </a-entity>
       </a-scene>
     </div>
