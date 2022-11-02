@@ -4,11 +4,11 @@
     <link rel='icon' type='image/svg+xml' href='/logo.svg' />
     <title>{{card.name}}</title>
     <script
-      src='https://cdn.jsdelivr.net/npm/mind-ar@1.1.5/dist/mindar-image.prod.js'
+      src='https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.0.0/dist/mindar-image.prod.js'
     ></script>
     <script src='https://aframe.io/releases/1.2.0/aframe.min.js'></script>
     <script
-      src='https://cdn.jsdelivr.net/npm/mind-ar@1.1.5/dist/mindar-image-aframe.prod.js'
+      src='https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.0.0/dist/mindar-image-aframe.prod.js'
     ></script>
     <script
       src='https://binzume.github.io/aframe-xylayout/dist/xylayout-all.min.js'
@@ -17,10 +17,6 @@
       .ar-container { width:100vw;height: 100vh;display: flex;flex-direction:
       column;margin: 0 auto; }
     </style>
-
-    <script src='/scripts/main.js'>
-
-    </script>
   </head>
 
   <body>
@@ -38,8 +34,8 @@
             id='profile'
             class='profile-photo'
             cross-origin='anonymous'
-            src={{card.cardImage}}
-            alt={{card.name}}
+            src={{cardImage}}
+            alt={{name}}
           />
 
           <img id='email' src='/icons/email.png' alt='email' />
@@ -87,14 +83,14 @@
           <a-entity>
             <a-entity
               align='left'
-              text='value:{{card.name}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; width: 3.2;'
+              text='value:{{name}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; width: 3.2;'
               position='1.55 1.18 0.05'
               width='1.5'
               color='white'
               material='opacity: 0.0'
             ></a-entity>
             <a-entity
-              text='value:{{card.title}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-Regular.json;'
+              text='value:{{title}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-Regular.json;'
               position='0.72 1.12 0.05'
               height='auto'
               width='1.5'
@@ -114,7 +110,7 @@
               material='opacity: 0.0'
             ></a-entity>
             <a-entity
-              text="value:{{card.about}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; line-height: 50; width:1.7; height: 0.8; wrapCount: 62; negate:'false'"
+              text="value:{{about}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; line-height: 50; width:1.7; height: 0.8; wrapCount: 62; negate:'false'"
               position='0.04 0.38 0.05'
               color='white'
             ></a-entity>
@@ -134,9 +130,9 @@
             spacing='0.18'
             justifyItems='space-around'
           >
-            {{#each card.links}}
+            {{#each links}}
               <a-image
-                onclick=''
+                onclick="window.open('{{this.link}}','_blank')"
                 class='clickable'
                 src='#{{this.name}}'
                 height='0.2'

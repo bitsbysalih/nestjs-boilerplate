@@ -93,7 +93,22 @@ export class CardController {
   @Render('card/card-scene')
   async root(@Query('id') id: string) {
     const card = await this.cardService.getCard(id);
-    return { card: card, marker: card.marker.markerFile };
+
+    const filteredLinks = card.links.map((link) =>
+      link.name === 'phone'
+        ? link.link.replace(/^/, 'tel:')
+        : link.name === 'mail'
+        ? link.link.replace(/^/, 'mailto:')
+        : link,
+    );
+    return {
+      name: card.name,
+      title: card.title,
+      cardImage: card.cardImage,
+      about: card.about,
+      links: filteredLinks,
+      marker: card.marker.markerFile,
+    };
   }
 
   @Get(':id/details')
