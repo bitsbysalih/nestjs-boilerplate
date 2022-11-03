@@ -96,11 +96,12 @@ export class CardController {
 
     const filteredLinks = card.links.map((link) =>
       link.name === 'phone'
-        ? link.link.replace(/^/, 'tel:')
-        : link.name === 'mail'
-        ? link.link.replace(/^/, 'mailto:')
+        ? { name: link.name, link: link.link.replace(/^/, 'tel:') }
+        : link.name === 'email'
+        ? { name: link.name, link: link.link.replace(/^/, 'mailto:') }
         : link,
     );
+    console.log(filteredLinks);
     return {
       name: card.name,
       title: card.title,
