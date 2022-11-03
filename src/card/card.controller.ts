@@ -101,7 +101,6 @@ export class CardController {
         ? { name: link.name, link: link.link.replace(/^/, 'mailto:') }
         : link,
     );
-    console.log(filteredLinks);
     return {
       name: card.name,
       title: card.title,
