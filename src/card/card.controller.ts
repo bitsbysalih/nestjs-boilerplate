@@ -102,7 +102,7 @@ export class CardController {
         : link,
     );
     return {
-      name: card.name,
+      name: card.name.length > 13 ? card.name.replace(' ', '\n') : card.name,
       title: card.title,
       cardImage: card.cardImage,
       about: card.about,
