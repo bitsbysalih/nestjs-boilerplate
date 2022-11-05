@@ -43,6 +43,7 @@
           alt={{name}}
         />
         <img id='card' src='/images/background.png' />
+        {{! <img id='test-card' src='/images/test-background.png' /> }}
 
         <img id='email' src='/icons/email.png' alt='email' />
         <img id='snapchat' src='/icons/snapchat.png' alt='snapchat' />
@@ -74,9 +75,9 @@
         <a-image
           src='#profile'
           alpha-test='0.5'
-          position='-0.59 1.23 0.05'
-          height='0.85'
-          width='0.85'
+          position='-0.66 1.23 0.05'
+          height='0.89'
+          width='0.75'
           scale='0.85 0.8 0'
           color='#ffffff'
         ></a-image>
@@ -89,18 +90,27 @@
           rotation='0 0 0'
           material='opacity: 0.7;'
         ></a-plane>
+        {{! <a-plane
+          position='0.0 0.5 0'
+          scale='2.0 2.25 2.0'
+          height='1'
+          src='#test-card'
+          width='1'
+          rotation='0 0 0'
+          material='opacity: 0.7;'
+        ></a-plane> }}
         <a-entity>
           <a-entity
             align='left'
-            text='value:{{name}}; color:#455154; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; width: 3.0;'
-            position='1.30 {{nameOffset}} 0.05'
+            text='value:{{name}}; color:#455154; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-Medium.json;  line-height: 46; width: 4.1;'
+            position='1.73 {{nameOffset}} 0.05'
             width='1.5'
             color='white'
             material='opacity: 0.0'
           ></a-entity>
           <a-entity
-            text='value:{{title}}; color:#455154; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-Regular.json;'
-            position='0.56 1.12 0.05'
+            text='value:{{title}}; color:#455154; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-Medium.json;'
+            position='0.45 1.0 0.05'
             height='auto'
             width='1.5'
             color='white'
@@ -110,15 +120,15 @@
         </a-entity>
         <a-entity>
           <a-entity
-            text='value:About; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; width: 4;'
-            position='1.05 0.55 0.05'
+            text='value:About; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-Medium.json; line-height: 50; width: 4;'
+            position='1.07 0.52 0.05'
             color='#ffffff'
             geometry='primitive:plane; height: 1; width: 2.0;'
             material='opacity: 0.0'
           ></a-entity>
           <a-entity
-            text="value:{{about}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-Regular.json; line-height: 50; width:1.8; height: 0.8; wrapCount: 55; negate:'false';wrapPixels: 1110"
-            position='-0.02 0.3 0.05'
+            text="value:{{about}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; line-height: 50; width:1.8; height: 0.8; wrapCount: 55; negate:'false';wrapPixels: 1110"
+            position='-0.02 {{aboutOffset}} 0.05'
             color='#ffffff'
           ></a-entity>
         </a-entity>

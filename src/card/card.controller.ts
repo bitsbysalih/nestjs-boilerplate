@@ -108,8 +108,9 @@ export class CardController {
       name: card.name.length > 13 ? card.name.replace(' ', '\n') : card.name,
       title: card.title,
       cardImage: card.cardImage,
-      nameOffset: card.name.length > 13 ? 1.33 : 1.2,
+      nameOffset: card.name.length > 13 ? 1.2 : 1.2,
       about: card.about,
+      aboutOffset: card.about.length <= 150 ? 0.1 : 0.3,
       links: filteredLinks,
       marker: card.marker.markerFile,
     };
