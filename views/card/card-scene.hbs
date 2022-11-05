@@ -4,11 +4,11 @@
     <link rel='icon' type='image/svg+xml' href='/logo.svg' />
     <title>{{name}}</title>
     <script
-      src='https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.5/dist/mindar-image.prod.js'
+      src='https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.0.0/dist/mindar-image.prod.js'
     ></script>
     <script src='https://aframe.io/releases/1.2.0/aframe.min.js'></script>
     <script
-      src='https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.5/dist/mindar-image-aframe.prod.js'
+      src='https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.0.0/dist/mindar-image-aframe.prod.js'
     ></script>
     <script
       src='https://binzume.github.io/aframe-xylayout/dist/xylayout-all.min.js'
@@ -79,7 +79,7 @@
           <a-entity
             align='left'
             text='value:{{name}}; color:#455154; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; width: 3.0;'
-            position='1.26 1.33 0.05'
+            position='1.26 {{nameOffset}} 0.05'
             width='1.5'
             color='white'
             material='opacity: 0.0'
