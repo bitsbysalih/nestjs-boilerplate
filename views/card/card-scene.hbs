@@ -27,11 +27,8 @@
       device-orientation-permission-ui='enabled: false'
     >
       <a-assets>
-        <img id='profile' src={{cardImage}} />
-        <img
-          id='card'
-          src='https://res.cloudinary.com/salihudev/image/upload/v1667429808/deep_sea_tr9j9u.png'
-        />
+        {{!-- <img id='profile' src={{cardImage}} /> --}}
+        <img id='card' src='/images/background.png' />
 
         <img id='email' src='/icons/email.png' alt='email' />
         <img id='snapchat' src='/icons/snapchat.png' alt='snapchat' />
@@ -60,7 +57,7 @@
       ></a-camera>
 
       <a-entity mindar-image-target='targetIndex: 0'>
-        <a-plane
+        {{! <a-plane
           src='#profile'
           position='-0.59 1.275 0.05'
           height='0.79'
@@ -68,17 +65,17 @@
           scale='0.8 0.7 0.7'
           rotation='0 0 0'
           material='opacity: 0.7;'
-        ></a-plane>
-        {{!-- <a-plane
-          src='#card'
+        ></a-plane> }}
+        <a-plane
           position='0.0 0.5 0'
           scale='2.0 2.25 2.0'
           height='1'
+          src='#card'
           width='1'
           rotation='0 0 0'
           material='opacity: 0.7;'
-        ></a-plane> --}}
-        <a-entity>
+        ></a-plane>
+        {{!-- <a-entity>
           <a-entity
             align='left'
             text='value:{{name}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; width: 3.2;'
@@ -96,8 +93,8 @@
             geometry='primitive:plane; height: 0.1; width: 1.5;'
             material='opacity: 0.0'
           ></a-entity>
-        </a-entity>
-        <a-entity>
+        </a-entity> --}}
+        {{!-- <a-entity>
           <a-entity
             text='value:ABOUT; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; width: 2.2;'
             position='0.27 0.58 0.05'
@@ -120,7 +117,7 @@
             geometry='primitive:plane; height: 0.1; width: 2;'
             material='opacity: 0.0'
           ></a-entity>
-        </a-entity>
+        </a-entity> --}}
         <a-xycontainer
           direction='row'
           position='0 -0.18 0.05'
