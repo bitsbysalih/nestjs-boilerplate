@@ -15,7 +15,8 @@ import {
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Cards, Users } from '@prisma/client';
-import { GetUser } from 'src/auth/auth.decorator';
+
+import { GetUser } from '../auth/auth.decorator';
 import { JwtAuthGuard } from '../auth/jwt-guard.guard';
 
 //Services imports
@@ -94,6 +95,7 @@ export class CardController {
   async root(@Query('id') id: string) {
     const card = await this.cardService.getCard(id);
 
+    //send the response
     const filteredLinks = card.links.map((link) =>
       link.name === 'phone'
         ? { name: link.name, link: link.link.replace(/^/, 'tel:') }
@@ -102,6 +104,7 @@ export class CardController {
         : link,
     );
     return {
+      id: card.id,
       name: card.name.length > 13 ? card.name.replace(' ', '\n') : card.name,
       title: card.title,
       cardImage: card.cardImage,

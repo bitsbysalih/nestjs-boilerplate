@@ -436,7 +436,7 @@ export class CardService {
     }
   }
 
-  async changeCardCount(id: string, newCount: number) {
+  private async changeCardCount(id: string, newCount: number) {
     try {
       await this.prisma.users.update({
         where: { id },
@@ -447,7 +447,7 @@ export class CardService {
     }
   }
 
-  async uploadImageToCloudinary(
+  private async uploadImageToCloudinary(
     file: Express.Multer.File,
   ): Promise<UploadApiResponse | UploadApiErrorResponse> {
     return new Promise((resolve, reject) => {
