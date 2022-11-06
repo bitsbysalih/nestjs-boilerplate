@@ -23,3 +23,9 @@
   color: #58696d;
   text-decoration: none;
 }
+
+@media (min-width: 300px) {
+  .buttons {
+    width: 90%;
+  }
+}
