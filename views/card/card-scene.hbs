@@ -142,14 +142,14 @@
           {{/each}}
         </a-xycontainer>
       </a-entity>
+      <div class='buttons'>
+        <a href='https://ebc.sailspad.com/card/{{id}}/profile'>Profile
+          <i class='fa-solid fa-user'></i>
+        </a>
+        <a href='/api/v1/card/{{id}}/save-to-contacts'>Add to contacts
+          <i class='fa-solid fa-address-book'></i>
+        </a>
+      </div>
     </a-scene>
-    {{!-- <div class='buttons'>
-      <a href='https://ebc.sailspad.com/{{id}}/profile'>Profile
-        <i class='fa-solid fa-user'></i>
-      </a>
-      <a href='https://ebc.sailspad.com/{{id}}/profile'>Add to contacts
-        <i class='fa-solid fa-address-book'></i>
-      </a>
-    </div> --}}
   </body>
 </html>

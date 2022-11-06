@@ -8,6 +8,7 @@ import {
   Put,
   Query,
   Render,
+  Res,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -114,6 +115,34 @@ export class CardController {
       links: filteredLinks,
       marker: card.marker.markerFile,
     };
+  }
+
+  @Get(':id/save-to-contacts')
+  async saveToContacts(@Res() res: any, @Param('id') id: string) {
+    const card = await this.cardService.getCard(id);
+
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const vCardsJS = require('vcards-js');
+
+    //create a new vCard
+    const vCard = vCardsJS();
+
+    //set properties
+    vCard.firstName = card.name.split(' ')[0];
+    vCard.lastName = card.name.split(' ')[1];
+    vCard.photo.attachFromUrl(card.cardImage);
+    vCard.email = card.email;
+    const phoneNumber = card.links.find(
+      (link) => link.name === 'phone' && link,
+    );
+    vCard.cellPhone = phoneNumber.link;
+    vCard.logo.attachFromUrl(card.logoImage);
+
+    res.set('Content-Type', `text/vcard; name="${card.name}.vcf"`);
+    res.set('Content-Disposition', `inline; filename="${card.name}.vcf"`);
+
+    //send the response
+    res.send(vCard.getFormattedString());
   }
 
   @Get(':id/details')
