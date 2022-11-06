@@ -93,10 +93,35 @@ export class CardController {
 
   @Get('view')
   @Render('card/card-scene')
-  async root(@Query('id') id: string) {
+  async renderAr(@Query('id') id: string) {
     const card = await this.cardService.getCard(id);
 
     //send the response
+    const filteredLinks = card.links.map((link) =>
+      link.name === 'phone'
+        ? { name: link.name, link: link.link.replace(/^/, 'tel:') }
+        : link.name === 'email'
+        ? { name: link.name, link: link.link.replace(/^/, 'mailto:') }
+        : link,
+    );
+    return {
+      id: card.id,
+      name: card.name.length > 13 ? card.name.replace(' ', '\n') : card.name,
+      title: card.title,
+      cardImage: card.cardImage,
+      nameOffset: card.name.length > 13 ? 1.2 : 1.2,
+      about: card.about,
+      aboutOffset: card.about.length <= 150 ? 0.1 : 0.3,
+      links: filteredLinks,
+      marker: card.marker.markerFile,
+    };
+  }
+
+  @Get('view-mobile')
+  @Render('card/card-scene-mobile')
+  async renderArMobile(@Query('id') id: string) {
+    const card = await this.cardService.getCard(id);
+
     const filteredLinks = card.links.map((link) =>
       link.name === 'phone'
         ? { name: link.name, link: link.link.replace(/^/, 'tel:') }

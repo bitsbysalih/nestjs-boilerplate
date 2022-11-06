@@ -1,0 +1,152 @@
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <link rel='icon' type='image/svg+xml' href='/logo.svg' />
+    <title>{{name}}</title>
+    <script
+      src='https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.0.0/dist/mindar-image.prod.js'
+    ></script>
+    <script src='https://aframe.io/releases/1.2.0/aframe.min.js'></script>
+    <script
+      src='https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.0.0/dist/mindar-image-aframe.prod.js'
+    ></script>
+    <script
+      src='https://binzume.github.io/aframe-xylayout/dist/xylayout-all.min.js'
+    ></script>
+    {{! <script src='/scripts/main.js'>
+    </script> }}
+    <link
+      rel='stylesheet'
+      href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css'
+      integrity='sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=='
+      crossorigin='anonymous'
+      referrerpolicy='no-referrer'
+    />
+    <link rel='stylesheet' href='/styles/main.css' />
+    <style>
+      .ar-container { width:100vw;height: 100vh;display: flex;flex-direction:
+      column;margin: 0 auto; }
+    </style>
+  </head>
+
+  <body>
+    <a-scene
+      mindar-image='imageTargetSrc: {{this.marker}};'
+      vr-mode-ui='enabled: false'
+      device-orientation-permission-ui='enabled: false'
+    >
+      <a-assets>
+        <img
+          id='profile'
+          crossorigin='anonymous'
+          src={{cardImage}}
+          alt={{name}}
+        />
+        <img id='card' src='/images/background.png' />
+        {{! <img id='test-card' src='/images/test-background.png' /> }}
+
+        <img id='email' src='/icons/email.png' alt='email' />
+        <img id='snapchat' src='/icons/snapchat.png' alt='snapchat' />
+        <img id='instagram' src='/icons/instagram.png' alt='instagram' />
+        <img id='facebook' src='/icons/facebook.png' alt='facebook' />
+        <img id='github' src='/icons/github.png' alt='github' />
+        <img id='website' src='/icons/globe.png' alt='website' />
+        <img id='linkedin' src='/icons/linkedin.png' alt='linkedin' />
+        <img id='phone' src='/icons/phone.png' alt='phone' />
+        <img id='behance' src='/icons/behance.png' alt='behance' />
+        <img id='youtube' src='/icons/youtube.png' alt='youtube' />
+        <img id='twitter' src='/icons/twitter.png' alt='twitter' />
+        <img id='discord' src='/icons/discord.png' alt='discord' />
+        <img id='pinterest' src='/icons/pinterest.png' alt='pinterest' />
+        <img id='whatsapp' src='/icons/whatsapp.png' alt='whatsapp' />
+        <img id='telegram' src='/icons/telegram.png' alt='telegram' />
+        <img id='reddit' src='/icons/reddit.png' alt='reddit' />
+        <img id='tiktok' src='/icons/tiktok.png' alt='tiktok' />
+      </a-assets>
+
+      <a-camera
+        position='0 0 0'
+        look-controls='enabled: false'
+        cursor='fuse: false; rayOrigin: mouse;'
+        raycaster='far: 10000; objects: .clickable'
+      ></a-camera>
+
+      <a-entity mindar-image-target='targetIndex: 0'>
+        <a-image
+          src='#profile'
+          alpha-test='0.5'
+          position='-0.635 1.23 0.02'
+          height='0.89'
+          width='0.8'
+          scale='0.85 0.8 0'
+          color='#ffffff'
+        ></a-image>
+        <a-plane
+          position='0.0 0.5 0'
+          scale='2.0 2.25 2.0'
+          height='1'
+          src='#card'
+          width='1'
+          rotation='0 0 0'
+          material='opacity: 0.7;'
+        ></a-plane>
+        <a-entity>
+          <a-entity
+            align='left'
+            text='value:{{name}}; color:#455154; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-Medium.json;  line-height: 46; width: 4.1;'
+            position='1.77 {{nameOffset}} 0.05'
+            width='1.5'
+            color='white'
+            material='opacity: 0.0'
+          ></a-entity>
+          <a-entity
+            text='value:{{title}}; color:#455154; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-Medium.json;'
+            position='0.49 1.0 0.05'
+            height='auto'
+            width='1.5'
+            color='white'
+            geometry='primitive:plane; height: 0.1; width: 1.5;'
+            material='opacity: 0.0'
+          ></a-entity>
+        </a-entity>
+        <a-entity>
+          <a-entity
+            text='value:About; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-Medium.json; line-height: 50; width: 4;'
+            position='1.07 0.52 0.05'
+            color='#ffffff'
+            geometry='primitive:plane; height: 1; width: 2.0;'
+            material='opacity: 0.0'
+          ></a-entity>
+          <a-entity
+            text="value:{{about}}; color:#FFFFFF; shader: msdf; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/poppins/Poppins-SemiBold.json; line-height: 50; width:1.8; height: 0.8; wrapCount: 55; negate:'false';wrapPixels: 1110"
+            position='-0.02 {{aboutOffset}} 0.05'
+            color='#ffffff'
+          ></a-entity>
+        </a-entity>
+        <a-xycontainer
+          direction='row'
+          position='0 -0.38 0.05'
+          spacing='0.18'
+          justifyItems='space-around'
+        >
+          {{#each links}}
+            <a-image
+              onclick="window.open('{{this.link}}','_blank')"
+              class='clickable'
+              src='#{{this.name}}'
+              height='0.2'
+              width='0.2'
+              animation='property: scale; to: 0.8 0.8 0.8;'
+            >
+            </a-image>
+          {{/each}}
+        </a-xycontainer>
+      </a-entity>
+      <div class='buttons'>
+        <a href='https://ebc.sailspad.com/card/{{id}}/profile'>Profile
+          <i class='fa-solid fa-user'></i>
+        </a>
+      </div>
+    </a-scene>
+  </body>
+</html>
