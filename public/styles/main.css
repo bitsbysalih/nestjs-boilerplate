@@ -1,4 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap');
+
+.a-loader-title {
+  color: #1e2d3d;
+  background: #1e2d3d;
+}
+
+.ar-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
 .buttons {
   z-index: 100;
   position: fixed;
