@@ -272,6 +272,7 @@ export class CardService {
       const card = await this.prisma.cards.findUnique({
         where: { id },
       });
+
       return card;
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -431,6 +432,21 @@ export class CardService {
         return filteredMarkers;
       }
       return filteredMarkers;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async addCardAnalytics(id: string) {
+    try {
+      const data = await this.prisma.analytics.create({
+        data: {
+          cardId: id,
+          readAt: new Date(),
+        },
+      });
+      console.log(data);
+      return data;
     } catch (error) {
       throw new BadRequestException(error.message);
     }

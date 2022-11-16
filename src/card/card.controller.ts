@@ -95,6 +95,7 @@ export class CardController {
   @Render('card/card-scene')
   async renderAr(@Query('id') id: string) {
     const card = await this.cardService.getCard(id);
+    await this.cardService.addCardAnalytics(id);
 
     //send the response
     const filteredLinks = card.links.map((link) =>
@@ -121,6 +122,7 @@ export class CardController {
   @Render('card/card-scene-mobile')
   async renderArMobile(@Query('id') id: string) {
     const card = await this.cardService.getCard(id);
+    await this.cardService.addCardAnalytics(id);
 
     const filteredLinks = card.links.map((link) =>
       link.name === 'phone'
@@ -145,6 +147,7 @@ export class CardController {
   @Get(':id/save-to-contacts')
   async saveToContacts(@Res() res: any, @Param('id') id: string) {
     const card = await this.cardService.getCard(id);
+    await this.cardService.addCardAnalytics(id);
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const vCardsJS = require('vcards-js');

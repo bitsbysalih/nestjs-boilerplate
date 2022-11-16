@@ -73,6 +73,12 @@ model StripeEvents {
     event String
 }
 
+model Analytics {
+    id     String   @id @default(auto()) @map("_id") @db.ObjectId
+    cardId String   @db.ObjectId
+    readAt DateTime @default(now())
+}
+
 enum MonthlySubscriptionStatus {
     active
     past_due
