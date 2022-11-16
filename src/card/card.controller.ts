@@ -236,7 +236,7 @@ export class CardController {
     return await this.cardService.getAllMarkers(user);
   }
 
-  @Get('analytic')
+  @Get('analytics')
   @UseGuards(JwtAuthGuard)
   async getAnalyticsData(@Query('id') id: string) {
     return await this.cardService.getAnalyticsData(id);

@@ -454,11 +454,11 @@ export class CardService {
 
   async getAnalyticsData(id: string) {
     try {
+      const months = Array(12).fill(0);
+
       const data = await this.prisma.analytics.findMany({
         where: { cardId: id },
       });
-
-      const months = Array(12).fill(0);
 
       data.forEach((obj) => {
         const month = new Date(obj.readAt).getMonth();
