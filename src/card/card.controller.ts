@@ -235,4 +235,10 @@ export class CardController {
   async getAllMarkers(@GetUser() user: Users) {
     return await this.cardService.getAllMarkers(user);
   }
+
+  @Get('analytic')
+  @UseGuards(JwtAuthGuard)
+  async getAnalyticsData(@Query('id') id: string) {
+    return await this.cardService.getAnalyticsData(id);
+  }
 }

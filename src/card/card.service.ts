@@ -454,10 +454,17 @@ export class CardService {
 
   async getAnalyticsData(id: string) {
     try {
-      const data = await this.prisma.analytics.findUnique({
+      const data = await this.prisma.analytics.findMany({
         where: { cardId: id },
       });
-      return data;
+
+      const months = Array(12).fill(0);
+
+      data.forEach((obj) => {
+        const month = new Date(obj.readAt).getMonth();
+        ++months[month];
+      });
+      return months;
     } catch (error) {
       throw new BadRequestException(error.message);
     }
