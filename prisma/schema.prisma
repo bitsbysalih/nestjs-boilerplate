@@ -75,7 +75,7 @@ model StripeEvents {
 
 model Analytics {
     id     String   @id @default(auto()) @map("_id") @db.ObjectId
-    cardId String   @db.ObjectId
+    cardId String   @unique @db.ObjectId
     readAt DateTime @default(now())
 }
 

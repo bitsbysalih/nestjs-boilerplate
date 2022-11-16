@@ -452,6 +452,17 @@ export class CardService {
     }
   }
 
+  async getAnalyticsData(id: string) {
+    try {
+      const data = await this.prisma.analytics.findUnique({
+        where: { cardId: id },
+      });
+      return data;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
   private async changeCardCount(id: string, newCount: number) {
     try {
       await this.prisma.users.update({
