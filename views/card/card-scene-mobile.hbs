@@ -126,7 +126,7 @@
         >
           {{#each links}}
             <a-image
-              onclick="addClickCount('{{this.name}}','{{../id}}');"
+              onclick="window.open('{{this.link}}','_blank'); addClickCount('{{this.name}}','{{../id}}');"
               class='clickable'
               src='#{{this.name}}'
               height='0.2'
