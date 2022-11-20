@@ -75,8 +75,15 @@ model StripeEvents {
 
 model Analytics {
     id     String   @id @default(auto()) @map("_id") @db.ObjectId
-    cardId String   @unique @db.ObjectId
+    cardId String   @db.ObjectId
     readAt DateTime @default(now())
+}
+
+model LinkAnalytics {
+    id       String @id @default(auto()) @map("_id") @db.ObjectId
+    linkName String
+    count    Int    @default(0)
+    cardId   String @db.ObjectId
 }
 
 enum MonthlySubscriptionStatus {

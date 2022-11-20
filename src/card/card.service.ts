@@ -445,7 +445,6 @@ export class CardService {
           readAt: new Date(),
         },
       });
-      console.log(data);
       return data;
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -455,16 +454,71 @@ export class CardService {
   async getAnalyticsData(id: string) {
     try {
       const months = Array(12).fill(0);
-
+      const days = Array(30).fill(0);
       const data = await this.prisma.analytics.findMany({
         where: { cardId: id },
       });
 
+      const linksData = await this.prisma.linkAnalytics.findMany({
+        where: { cardId: id },
+      });
+
+      const linksTotal = linksData.reduce(
+        (partialSum, link) => partialSum + link.count,
+        0,
+      );
+
       data.forEach((obj) => {
         const month = new Date(obj.readAt).getMonth();
         ++months[month];
+        const day = new Date(obj.readAt).getDay();
+        ++days[day];
       });
-      return months;
+      return {
+        months,
+        days,
+        totalVisits: months.reduce((partialSum, a) => partialSum + a, 0),
+        linksTotal,
+      };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async addLinkAnalytics(name: string, cardId: string) {
+    try {
+      const countExists = await this.prisma.linkAnalytics.findFirst({
+        where: { cardId: cardId, linkName: name },
+      });
+      if (countExists) {
+        const data = await this.prisma.linkAnalytics.update({
+          where: { id: countExists.id },
+          data: {
+            count: countExists.count + 1,
+          },
+        });
+        return data;
+      } else {
+        const data = await this.prisma.linkAnalytics.create({
+          data: {
+            cardId: cardId,
+            linkName: name,
+            count: 1,
+          },
+        });
+        return data;
+      }
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async getLinksAnalytics(id: string) {
+    try {
+      const data = await this.prisma.linkAnalytics.findMany({
+        where: { cardId: id },
+      });
+      return data;
     } catch (error) {
       throw new BadRequestException(error.message);
     }

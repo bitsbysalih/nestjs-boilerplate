@@ -1,10 +1,16 @@
 services:
   mongo:
-    image: mongo
+    image: 'bitnami/mongodb:latest'
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=127.0.0.1
+      - MONGODB_REPLICA_SET_MODE=primary
+      - MONGODB_ROOT_USER=root
+      - MONGODB_ROOT_PASSWORD=anypassword
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
     ports:
-      - 27017:27017
+      - '27017:27017'
     volumes:
-      - mongo:/data/db
+      - 'mongo-db:/bitnami/mongodb'
   localstack:
     image: localstack/localstack
     ports:
@@ -28,4 +34,4 @@ services:
       - ${MAIL_CLIENT_PORT}:1080
       - ${MAIL_PORT}:1025
 volumes:
-  mongo:
+  mongo-db:

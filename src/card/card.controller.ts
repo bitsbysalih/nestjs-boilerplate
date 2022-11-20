@@ -22,6 +22,7 @@ import { JwtAuthGuard } from '../auth/jwt-guard.guard';
 
 //Services imports
 import { CardService } from './card.service';
+import { AddLinkClicksDto } from './dto/add-link-clicks-dto';
 
 //DTO imports
 import { CheckShortNameDto } from './dto/check-short-name.dto';
@@ -171,6 +172,19 @@ export class CardController {
 
     //send the response
     res.send(vCard.getFormattedString());
+  }
+
+  @Post('link-clicks')
+  async addLinkClicks(@Body() addLinkClicksDto: AddLinkClicksDto) {
+    return await this.cardService.addLinkAnalytics(
+      addLinkClicksDto.name,
+      addLinkClicksDto.cardId,
+    );
+  }
+
+  @Get('link-clicks/:id')
+  async getLinksAnalytics(@Param('id') id: string) {
+    return await this.cardService.getLinksAnalytics(id);
   }
 
   @Get(':id/details')

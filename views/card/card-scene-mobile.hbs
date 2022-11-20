@@ -13,8 +13,6 @@
     <script
       src='https://binzume.github.io/aframe-xylayout/dist/xylayout-all.min.js'
     ></script>
-    {{! <script src='/scripts/main.js'>
-    </script> }}
     <link
       rel='stylesheet'
       href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css'
@@ -23,6 +21,7 @@
       referrerpolicy='no-referrer'
     />
     <link rel='stylesheet' href='/styles/main.css' />
+    <script src='/scripts/main.js'></script>
   </head>
 
   <body>
@@ -40,7 +39,6 @@
           alt={{name}}
         />
         <img id='card' src='/images/background.png' />
-        {{! <img id='test-card' src='/images/test-background.png' /> }}
 
         <img id='email' src='/icons/email.png' alt='email' />
         <img id='snapchat' src='/icons/snapchat.png' alt='snapchat' />
@@ -128,7 +126,7 @@
         >
           {{#each links}}
             <a-image
-              onclick="window.open('{{this.link}}','_blank')"
+              onclick="addClickCount('{{this.name}}','{{../id}}');"
               class='clickable'
               src='#{{this.name}}'
               height='0.2'
@@ -147,3 +145,4 @@
     </a-scene>
   </body>
 </html>
+{{!-- window.open('{{this.link}}','_blank'); --}}
