@@ -7,9 +7,8 @@ function addClickCount(name, id) {
     },
     body: JSON.stringify({ name: name, cardId: id }),
   })
-    .then(function (response) {
+    .then(function () {
       console.log(name, id);
-      console.log(response);
     })
     .catch(function (err) {
       console.warn('Something went wrong.', err);
