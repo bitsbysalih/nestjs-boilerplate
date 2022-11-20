@@ -476,7 +476,7 @@ export class CardService {
       });
       return {
         months,
-        days,
+        days: days.reverse(),
         totalVisits: months.reduce((partialSum, a) => partialSum + a, 0),
         linksTotal,
       };
