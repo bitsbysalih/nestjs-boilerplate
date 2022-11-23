@@ -164,7 +164,7 @@ export class CardController {
     const phoneNumber = card.links.find(
       (link) => link.name === 'phone' && link,
     );
-    // vCard.cellPhone = phoneNumber.link;
+    vCard.cellPhone = phoneNumber.link;
     vCard.logo.attachFromUrl(card.logoImage);
 
     res.set('Content-Type', `text/vcard; name="${card.name}.vcf"`);
