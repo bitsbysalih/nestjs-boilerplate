@@ -451,10 +451,44 @@ export class CardService {
     }
   }
 
+  async addProfileVisitsCount(id: string) {
+    try {
+      const card = await this.prisma.cards.findUnique({
+        where: { id },
+      });
+      await this.prisma.cards.update({
+        where: { id },
+        data: {
+          profileVisits: card.profileVisits + 1,
+        },
+      });
+      return { 'count increased': true };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async addedToContactsCount(id: string) {
+    try {
+      const card = await this.prisma.cards.findUnique({
+        where: { id },
+      });
+      await this.prisma.cards.update({
+        where: { id },
+        data: {
+          addedToContacts: card.addedToContacts + 1,
+        },
+      });
+      return { 'count increased': true };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
   async getAnalyticsData(id: string) {
     try {
       const months = Array(12).fill(0);
-      const days = Array(30).fill(0);
+      const days = Array(7).fill(0);
       const data = await this.prisma.analytics.findMany({
         where: { cardId: id },
       });
@@ -462,7 +496,7 @@ export class CardService {
       const linksData = await this.prisma.linkAnalytics.findMany({
         where: { cardId: id },
       });
-
+      const card = await this.prisma.cards.findUnique({ where: { id } });
       const linksTotal = linksData.reduce(
         (partialSum, link) => partialSum + link.count,
         0,
@@ -476,9 +510,12 @@ export class CardService {
       });
       return {
         months,
-        days: days.reverse(),
-        totalVisits: months.reduce((partialSum, a) => partialSum + a, 0),
+        days,
+        totalYearlyVisits: months.reduce((partialSum, a) => partialSum + a, 0),
         totalDailyVisits: days.reduce((partialSum, a) => partialSum + a, 0),
+        totalVisits: data.length,
+        profileVisits: card.profileVisits,
+        addedToContacts: card.addedToContacts,
         linksTotal,
       };
     } catch (error) {

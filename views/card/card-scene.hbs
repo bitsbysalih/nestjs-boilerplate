@@ -139,10 +139,10 @@
         </a-xycontainer>
       </a-entity>
       <div class='buttons'>
-        <a href='https://ebc.sailspad.com/card/{{id}}/profile'>Profile
+        <a href='https://ebc.sailspad.com/card/{{id}}/profile' onclick="addProfileVisitsCount('{{id}}');">Profile
           <i class='fa-solid fa-user'></i>
         </a>
-        <a href='/api/v1/card/{{id}}/save-to-contacts'>Add to contacts
+        <a href='/api/v1/card/{{id}}/save-to-contacts' onclick="addedToContactsCount('{{id}}');">Add to contacts
           <i class='fa-solid fa-address-book'></i>
         </a>
       </div>

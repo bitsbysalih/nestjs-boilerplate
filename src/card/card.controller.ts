@@ -164,7 +164,7 @@ export class CardController {
     const phoneNumber = card.links.find(
       (link) => link.name === 'phone' && link,
     );
-    vCard.cellPhone = phoneNumber.link;
+    // vCard.cellPhone = phoneNumber.link;
     vCard.logo.attachFromUrl(card.logoImage);
 
     res.set('Content-Type', `text/vcard; name="${card.name}.vcf"`);
@@ -180,6 +180,18 @@ export class CardController {
       addLinkClicksDto.name,
       addLinkClicksDto.cardId,
     );
+  }
+
+  @Post('profile-visits')
+  async addProfileVisitsCount(@Body() addLinkClicksDto: AddLinkClicksDto) {
+    return await this.cardService.addProfileVisitsCount(
+      addLinkClicksDto.cardId,
+    );
+  }
+
+  @Post('added-to-contacts')
+  async addedToContactsCount(@Body() addLinkClicksDto: AddLinkClicksDto) {
+    return await this.cardService.addedToContactsCount(addLinkClicksDto.cardId);
   }
 
   @Get('link-clicks/:id')

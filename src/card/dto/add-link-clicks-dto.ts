@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class AddLinkClicksDto {
   @IsString()
@@ -6,6 +6,6 @@ export class AddLinkClicksDto {
   cardId: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   name: string;
 }

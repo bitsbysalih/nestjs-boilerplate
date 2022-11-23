@@ -49,6 +49,8 @@ model Cards {
     userId          String    @db.ObjectId
     links           Link[]
     marker          Marker?
+    profileVisits   Int?
+    addedToContacts Int?
     createdAt       DateTime? @default(now())
 }
 
