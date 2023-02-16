@@ -50,22 +50,18 @@ function addedToContactsCount(id) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function forgotPassword() {
-  const email = document.getElementById('email').value;
-  await fetch(`/api/v1/auth/forgot-password?email=${email}`, {
+async function forgotPassword(e) {
+  e.preventDefault();
+  let form = document.getElementById('#forgotPasswordForm');
+  let data = new FormData(form);
+  await fetch(`/api/v1/auth/forgot-password?email=${data.get('email')}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
   })
-    .then(function (res) {
-      console.log(res.json());
-      console.log(email);
-      if (res.ok) {
-        alert('Check your email for the reset link');
-      } else {
-        alert('Something went wrong');
-      }
+    .then(function () {
+      alert('Check your email for the reset link');
     })
     .catch(function (err) {
       console.warn('Something went wrong.', err);
