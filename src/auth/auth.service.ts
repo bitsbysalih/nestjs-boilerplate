@@ -278,7 +278,7 @@ export class AuthService {
     await this.mailService.sendForgotPasswordEmail(
       user.firstName,
       user.email,
-      `${process.env.BACKEND_URL}/auth/reset-password/${token}`,
+      `${process.env.BACKEND_URL}/api/v1/auth/reset-password/${token}`,
     );
 
     return token;
