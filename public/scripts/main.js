@@ -59,7 +59,7 @@ function forgotPassword() {
     alert('Please enter your email');
     return;
   }
-  fetch(`/api/v1/auth/forgot-password?email=${email}`, {
+  fetch(`/api/v1/auth/forgot-password?email=${email.toLowerCase()}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -102,7 +102,9 @@ function resetPassword(token) {
   })
     .then(function (res) {
       if (res.ok) {
-        alert('Password reset successfully');
+        alert(
+          "Password reset successfully. You'll be redirected to the login page",
+        );
         window.location.href = 'https://app.sailspad.com/login';
       } else {
         alert('Something went wrong');
