@@ -50,15 +50,17 @@ function addedToContactsCount(id) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function forgotPassword() {
+async function forgotPassword() {
   const email = document.getElementById('email').value;
-  fetch(`/api/v1/auth/forgot-password?email=${email}`, {
+  await fetch(`/api/v1/auth/forgot-password?email=${email}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
   })
     .then(function (res) {
+      console.log(res.json());
+      console.log(email);
       if (res.ok) {
         alert('Check your email for the reset link');
       } else {
