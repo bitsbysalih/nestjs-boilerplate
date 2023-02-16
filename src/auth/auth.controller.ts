@@ -66,4 +66,10 @@ export class AuthController {
     // this.logger.log('Verifying email');
     return await this.authService.checkEmail(email);
   }
+
+  @Post('forgot-password')
+  async forgotPassword(@Query('email') email: string) {
+    // this.logger.log('Verifying email');
+    return await this.authService.forgotPassword(email);
+  }
 }

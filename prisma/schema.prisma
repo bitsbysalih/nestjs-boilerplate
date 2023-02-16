@@ -88,6 +88,12 @@ model LinkAnalytics {
     cardId   String @db.ObjectId
 }
 
+model ForgotPasswordTokens {
+    id    String @id @default(auto()) @map("_id") @db.ObjectId
+    email String
+    token String @unique
+}
+
 enum MonthlySubscriptionStatus {
     active
     past_due

@@ -238,14 +238,6 @@ export class AuthService {
     return user ? false : true;
   }
 
-  async forgotPassword() {
-    try {
-      // find user account by id and send an otp
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
-  }
-
   //Returns auth details on sign in and sign up and other auth related processes
   async returnAccountDetails(user: Users) {
     const payload: JwtPayload = {
@@ -266,6 +258,30 @@ export class AuthService {
       accessToken: await this.jwtService.signAsync(payload),
       refreshToken: await this.createRefreshToken(user.email),
     };
+  }
+
+  async forgotPassword(email: string) {
+    const user = await this.prisma.users.findUnique({
+      where: { email },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const token = nanoid();
+    await this.prisma.forgotPasswordTokens.create({
+      data: {
+        email,
+        token,
+      },
+    });
+
+    await this.mailService.sendForgotPasswordEmail(
+      user.firstName,
+      user.email,
+      `${process.env.BACKEND_URL}/auth/reset-password/${token}`,
+    );
+
+    return token;
   }
 
   ////////////////////////////////

@@ -77,6 +77,52 @@ export class MailService {
     );
   }
 
+  async sendForgotPasswordEmail(
+    name: string,
+    email: string,
+    resetLink: string,
+  ): Promise<boolean> {
+    const mail = confirmMail
+      .replace(new RegExp('--PersonName--', 'g'), name)
+      //   .replace(new RegExp('--CompanyName--', 'g'), config.project.company)
+      //   .replace(new RegExp('--ProjectName--', 'g'), config.project.name)
+      //   .replace(new RegExp('--ProjectAddress--', 'g'), config.project.address)
+      //   .replace(new RegExp('--ProjectLogo--', 'g'), config.project.logoUrl)
+      //   .replace(new RegExp('--ProjectSlogan--', 'g'), config.project.slogan)
+      //   .replace(new RegExp('--ProjectColor--', 'g'), config.project.color)
+      //   .replace(new RegExp('--ProjectLink--', 'g'), config.project.url)
+      //   .replace(new RegExp('--Socials--', 'g'), this.socials)
+      .replace(new RegExp('--email--', 'g'), email)
+      .replace(new RegExp('--resetLink--', 'g'), resetLink);
+    //   .replace(
+    //     new RegExp('--TermsOfServiceLink--', 'g'),
+    //     config.project.termsOfServiceUrl,
+    //   );
+
+    const mailOptions = {
+      from: `"${this.configService.get(
+        'mail.defaultName',
+      )}" <${this.configService.get('mail.defaultEmail')}>`,
+      to: email, // list of receivers (separated by ,)
+      subject: `Password Reset Request for ${name}`,
+      html: mail,
+    };
+
+    return new Promise<boolean>((resolve) =>
+      this.transporter.sendMail(mailOptions, async (error) => {
+        if (error) {
+          this.logger.error(
+            'Mail sending failed, check your service credentials.',
+            error,
+          );
+          console.log(error);
+          resolve(false);
+        }
+        resolve(true);
+      }),
+    );
+  }
+
   async sendNewSubscriptionEmail(
     name: string,
     email: string,
