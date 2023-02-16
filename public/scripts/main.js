@@ -50,18 +50,25 @@ function addedToContactsCount(id) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function forgotPassword(e) {
-  e.preventDefault();
-  let form = document.getElementById('#forgotPasswordForm');
-  let data = new FormData(form);
-  await fetch(`/api/v1/auth/forgot-password?email=${data.get('email')}`, {
+function forgotPassword() {
+  let form = document.querySelector('#forgotPassword');
+
+  const data = new FormData(form);
+  const email = data.get('email');
+  if (!email) {
+    alert('Please enter your email');
+    return;
+  }
+  fetch(`/api/v1/auth/forgot-password?email=${email}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
   })
-    .then(function () {
-      alert('Check your email for the reset link');
+    .then(function (res) {
+      if (res.ok) {
+        alert('Check your email for the reset link');
+      }
     })
     .catch(function (err) {
       console.warn('Something went wrong.', err);
@@ -70,8 +77,12 @@ async function forgotPassword(e) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function resetPassword(token) {
-  const password = document.getElementById('password').value;
-  const confirmPassword = document.getElementById('confirmPassword').value;
+  let form = document.querySelector('#resetPasswordForm');
+  const data = new FormData(form);
+
+  const password = data.get('password');
+  const confirmPassword = data.get('confirmPassword');
+
   if (!password) {
     alert('Please enter a password');
     return;
@@ -96,7 +107,6 @@ function resetPassword(token) {
       } else {
         alert('Something went wrong');
       }
-      //redirect them to the login page
     })
     .catch(function (err) {
       console.warn('Something went wrong.', err);

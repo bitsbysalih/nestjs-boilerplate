@@ -293,7 +293,7 @@ export class AuthService {
     if (!foundToken) {
       throw new ConflictException('Bad token');
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 12);
     await this.prisma.users.update({
       where: {
         email: foundToken.email,
