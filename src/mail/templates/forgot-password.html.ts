@@ -1,5 +1,5 @@
 // tslint:disable-next-line: max-line-length
-export const confirmMail = `<head>
+export const forgotPasswordMail = `<head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width" />
 </head>

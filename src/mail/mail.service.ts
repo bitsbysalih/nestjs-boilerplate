@@ -2,7 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createTransport } from 'nodemailer';
 import * as Mail from 'nodemailer/lib/mailer';
+
 import { confirmMail } from './templates/confirm-mail.html';
+import { forgotPasswordMail } from './templates/forgot-password.html';
 import { newSubscriptionMail } from './templates/new-subscription.html';
 import { subscriptionCancellationMail } from './templates/subscription-cancellation.html';
 import { subscriptionUpdateMail } from './templates/subscription-update.html';
@@ -82,7 +84,7 @@ export class MailService {
     email: string,
     resetLink: string,
   ): Promise<boolean> {
-    const mail = confirmMail
+    const mail = forgotPasswordMail
       .replace(new RegExp('--PersonName--', 'g'), name)
       //   .replace(new RegExp('--CompanyName--', 'g'), config.project.company)
       //   .replace(new RegExp('--ProjectName--', 'g'), config.project.name)
