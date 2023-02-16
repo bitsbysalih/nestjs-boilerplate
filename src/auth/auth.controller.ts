@@ -7,6 +7,7 @@ import {
   UploadedFile,
   UseGuards,
   Get,
+  Render,
   //   Inject,
   //   LoggerService,
 } from '@nestjs/common';
@@ -71,5 +72,28 @@ export class AuthController {
   async forgotPassword(@Query('email') email: string) {
     // this.logger.log('Verifying email');
     return await this.authService.forgotPassword(email);
+  }
+
+  @Post('reset-password')
+  async resetPassword(
+    @Query('token') token: string,
+    @Body('password') password: string,
+  ) {
+    // this.logger.log('Verifying email');
+    return await this.authService.resetPassword(token, password);
+  }
+
+  @Get('forgot-password-page')
+  @Render('auth/forgot-password')
+  async forgotPasswordPage() {
+    // this.logger.log('Verifying email');
+    return {};
+  }
+
+  @Get('reset-password-page')
+  @Render('auth/reset-password')
+  async resetPasswordPage(@Query('token') token: string) {
+    // this.logger.log('Verifying email');
+    return { token };
   }
 }

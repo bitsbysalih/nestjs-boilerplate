@@ -48,3 +48,59 @@ function addedToContactsCount(id) {
       console.warn('Something went wrong.', err);
     });
 }
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function forgotPassword() {
+  const email = document.getElementById('email').value;
+  fetch(`/api/v1/auth/forgot-password?email=${email}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(function (res) {
+      if (res.ok) {
+        alert('Check your email for the reset link');
+      } else {
+        alert('Something went wrong');
+      }
+    })
+    .catch(function (err) {
+      console.warn('Something went wrong.', err);
+    });
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function resetPassword(token) {
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  if (!password) {
+    alert('Please enter a password');
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    alert('Passwords do not match');
+    return;
+  }
+
+  fetch(`/api/v1/auth/reset-password?token=${token}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ password }),
+  })
+    .then(function (res) {
+      if (res.ok) {
+        alert('Password reset successfully');
+        window.location.href = 'https://app.sailspad.com/login';
+      } else {
+        alert('Something went wrong');
+      }
+      //redirect them to the login page
+    })
+    .catch(function (err) {
+      console.warn('Something went wrong.', err);
+    });
+}

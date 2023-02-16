@@ -278,10 +278,36 @@ export class AuthService {
     await this.mailService.sendForgotPasswordEmail(
       user.firstName,
       user.email,
-      `${process.env.FRONTEND_URL}/reset-password?token=${token}`,
+      `${process.env.BACKEND_URL}/api/v1/auth/reset-password-page?token=${token}`,
     );
 
     return token;
+  }
+
+  async resetPassword(token: string, password: string) {
+    const foundToken = await this.prisma.forgotPasswordTokens.findUnique({
+      where: {
+        token,
+      },
+    });
+    if (!foundToken) {
+      throw new ConflictException('Bad token');
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await this.prisma.users.update({
+      where: {
+        email: foundToken.email,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+    await this.prisma.forgotPasswordTokens.delete({
+      where: {
+        token,
+      },
+    });
+    return { passwordReset: true };
   }
 
   ////////////////////////////////
