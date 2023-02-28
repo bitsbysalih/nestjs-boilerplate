@@ -487,15 +487,25 @@ export class CardService {
 
   async getAnalyticsData(id: string) {
     try {
+      const now = new Date();
+      const thisYear = now.getFullYear();
+
       const months = Array(12).fill(0);
       const days = Array(7).fill(0);
       const data = await this.prisma.analytics.findMany({
-        where: { cardId: id },
+        where: {
+          cardId: id,
+          readAt: {
+            gte: new Date(thisYear, 0, 1),
+            lt: new Date(thisYear + 1, 0, 1),
+          },
+        },
       });
 
       const linksData = await this.prisma.linkAnalytics.findMany({
         where: { cardId: id },
       });
+
       const card = await this.prisma.cards.findUnique({ where: { id } });
       const linksTotal = linksData.reduce(
         (partialSum, link) => partialSum + link.count,
@@ -508,6 +518,7 @@ export class CardService {
         const day = new Date(obj.readAt).getDay();
         ++days[day];
       });
+
       return {
         months,
         days,
